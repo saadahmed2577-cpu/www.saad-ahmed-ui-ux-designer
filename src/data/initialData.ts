@@ -1,0 +1,363 @@
+import { Project, Skill, ExperienceItem, Testimonial } from '../types';
+
+import nobleCover from '../assets/images/noble_matrimonial_cover_1785781408922.jpg';
+import fishinityCover from '../assets/images/fishinity_pro_cover_1785781425272.jpg';
+import flippCover from '../assets/images/flipp_productions_cover_1785781444009.jpg';
+import sheltermaxCover from '../assets/images/sheltermax_cover_1785781463356.jpg';
+
+export const INITIAL_PROJECTS: Project[] = [
+  {
+    id: 'noble-matrimonial',
+    title: 'Noble Matrimonial',
+    category: 'UX Case Study',
+    year: '2025',
+    clientName: 'Noble Matrimony Inc.',
+    coverImage: nobleCover,
+    galleryImages: [
+      nobleCover,
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80'
+    ],
+    shortDescription: 'Designed a modern matrimonial platform focused on trust, simplicity, accessibility, and premium user experience.',
+    problemStatement: 'Existing matrimonial platforms are often cluttered, overwhelmed with intrusive ads, lacking privacy controls, and presenting outdated visual design that reduces trust among young professionals.',
+    research: 'Conducted 18 semi-structured interviews with single professionals aged 24-38. 82% cited privacy as their primary concern, while 74% desired clear match compatibility signals without overwhelming profiles.',
+    designProcess: [
+      { phase: 'Research', description: 'User interviews, competitive analysis of 6 regional platforms, persona creation.' },
+      { phase: 'Wireframing', description: 'Low-fidelity layouts prioritizing profile verification badges & match preference filters.' },
+      { phase: 'UI Design', description: 'Dark luxury palette with warm accent accents, high-contrast typography, & spacious cards.' },
+      { phase: 'Prototyping', description: 'Figma interactive prototype testing micro-interactions for profile bookmarking.' },
+      { phase: 'Testing', description: '5 user usability sessions resulting in 94% task completion rate for profile setup.' },
+      { phase: 'Final Delivery', description: 'Complete Figma design system component library & developer handoff token guidelines.' }
+    ],
+    wireframeImages: [
+      'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80'
+    ],
+    uiScreens: [
+      nobleCover,
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80'
+    ],
+    prototypeLink: 'https://www.figma.com/proto/sample-noble-matrimonial',
+    liveLink: 'https://noblematrimonial.com',
+    toolsUsed: ['Figma', 'Adobe Photoshop', 'FigJam', 'Principle'],
+    tags: ['UX Case Study', 'Matrimonial', 'Privacy First', 'Design System'],
+    typography: {
+      headingFont: 'Playfair Display',
+      bodyFont: 'Inter',
+      sampleText: 'Connecting Souls Through Dignified Design.'
+    },
+    colorPalette: [
+      { name: 'Obsidian Night', hex: '#0A0A0A' },
+      { name: 'Royal Violet', hex: '#6F3DFF' },
+      { name: 'Card Charcoal', hex: '#141414' },
+      { name: 'Muted Gold', hex: '#D4AF37' }
+    ],
+    featured: true
+  },
+  {
+    id: 'fishinity-pro',
+    title: 'Fishinity Pro',
+    category: 'Dashboard Design',
+    year: '2025',
+    clientName: 'Fishinity Technologies',
+    coverImage: fishinityCover,
+    galleryImages: [
+      fishinityCover,
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80'
+    ],
+    shortDescription: 'Created a clean analytics dashboard with intuitive navigation and data visualization for enterprise users.',
+    problemStatement: 'Enterprise marine logistics operators required a real-time data monitoring platform to track fleet metrics, catch yields, and fuel consumption without cognitive overload.',
+    research: 'Observed operator workflows in live operations. Identified key bottlenecks in multi-tab navigation and high alert fatigue caused by un-prioritized notifications.',
+    designProcess: [
+      { phase: 'Research', description: 'Contextual inquiry with 12 fleet operators, mapping telematics streams.' },
+      { phase: 'Wireframing', description: 'Modular widget system allowing custom dashboard grid arrangements.' },
+      { phase: 'UI Design', description: 'High-contrast dark mode layout optimized for multi-monitor command stations.' },
+      { phase: 'Prototyping', description: 'Simulated real-time chart updates and alert toast transitions.' },
+      { phase: 'Testing', description: 'Reduced operator reaction time to critical system alerts by 38%.' },
+      { phase: 'Final Delivery', description: 'Exported React UI component specs and Recharts integration guidelines.' }
+    ],
+    wireframeImages: [
+      'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=800&q=80'
+    ],
+    uiScreens: [
+      fishinityCover,
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80'
+    ],
+    prototypeLink: 'https://www.figma.com/proto/sample-fishinity-pro',
+    liveLink: 'https://fishinitypro.com',
+    toolsUsed: ['Figma', 'Adobe Illustrator', 'Principle'],
+    tags: ['Dashboard', 'Analytics', 'Data Visualization', 'Enterprise UI'],
+    typography: {
+      headingFont: 'Plus Jakarta Sans',
+      bodyFont: 'Inter',
+      sampleText: 'Precision Analytics for Modern Marine Telematics.'
+    },
+    colorPalette: [
+      { name: 'Deep Sea Black', hex: '#0A0A0A' },
+      { name: 'Neon Indigo', hex: '#6F3DFF' },
+      { name: 'Surface Gray', hex: '#141414' },
+      { name: 'Cyan Signal', hex: '#00E5FF' }
+    ],
+    featured: true
+  },
+  {
+    id: 'flipp-productions',
+    title: 'FLiPP Productions',
+    category: 'Website Design',
+    year: '2025',
+    clientName: 'FLiPP Media House',
+    coverImage: flippCover,
+    galleryImages: [
+      flippCover,
+      'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80'
+    ],
+    shortDescription: 'Designed a modern entertainment website featuring merchandise, artist branding, event promotion, and responsive layouts.',
+    problemStatement: 'FLiPP Productions needed an immersive digital storefront to showcase music releases, book tour tickets, and sell exclusive merchandise seamlessly in a unified brand experience.',
+    research: 'Analyzed top global record label sites and indie artist stores. Found that 68% of visitors abandon checkout when routed to third-party event ticketing sites.',
+    designProcess: [
+      { phase: 'Research', description: 'Artist brand identity mapping, e-commerce drop workflow analysis.' },
+      { phase: 'Wireframing', description: 'Full-bleed video hero headers, fluid merchandise carousel grid.' },
+      { phase: 'UI Design', description: 'High-energy luxury dark theme with editorial typography and kinetic hover effects.' },
+      { phase: 'Prototyping', description: 'Smooth page transitions and interactive audio player drawer.' },
+      { phase: 'Testing', description: 'Mobile checkout test achieved 4.8/5 satisfaction score across 20 test users.' },
+      { phase: 'Final Delivery', description: 'Webflow ready design tokens & custom motion specifications.' }
+    ],
+    wireframeImages: [
+      'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80'
+    ],
+    uiScreens: [
+      flippCover,
+      'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80'
+    ],
+    prototypeLink: 'https://www.figma.com/proto/sample-flipp-productions',
+    liveLink: 'https://flippproductions.com',
+    toolsUsed: ['Figma', 'Adobe Photoshop', 'After Effects'],
+    tags: ['Entertainment', 'E-Commerce', 'Brand Identity', 'Webflow Ready'],
+    typography: {
+      headingFont: 'Playfair Display',
+      bodyFont: 'Inter',
+      sampleText: 'Unfiltered Talent. Unforgettable Shows.'
+    },
+    colorPalette: [
+      { name: 'Dark Void', hex: '#0A0A0A' },
+      { name: 'Electric Violet', hex: '#6F3DFF' },
+      { name: 'Card Surface', hex: '#141414' },
+      { name: 'Crimson Accent', hex: '#FF3366' }
+    ],
+    featured: true
+  },
+  {
+    id: 'sheltermax-protection',
+    title: 'ShelterMax Protection',
+    category: 'Corporate Website',
+    year: '2025',
+    clientName: 'ShelterMax Global Security',
+    coverImage: sheltermaxCover,
+    galleryImages: [
+      sheltermaxCover,
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80'
+    ],
+    shortDescription: 'Designed a premium corporate website emphasizing trust, security, and strong visual hierarchy.',
+    problemStatement: 'ShelterMax lacked a cohesive digital presence that reflected their high-net-worth security consultation services, leading to low conversion on enterprise inquiry forms.',
+    research: 'Evaluated C-suite decision-making habits. Trust, credibility signals, executive testimonials, and clear service matrices were identified as non-negotiable conversion drivers.',
+    designProcess: [
+      { phase: 'Research', description: 'C-suite buyer persona interviews, trust signal analysis.' },
+      { phase: 'Wireframing', description: 'Structured corporate hero, comparison matrices, and clear consultation CTA.' },
+      { phase: 'UI Design', description: 'Minimalist luxury aesthetic with geometric card grids and subtle borders.' },
+      { phase: 'Prototyping', description: 'Interactive quote calculator and secure portal entry preview.' },
+      { phase: 'Testing', description: 'A/B testing verified 42% increase in qualified consultation requests.' },
+      { phase: 'Final Delivery', description: 'Responsive Figma system & client CMS structure documentation.' }
+    ],
+    wireframeImages: [
+      'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=800&q=80'
+    ],
+    uiScreens: [
+      sheltermaxCover,
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80'
+    ],
+    prototypeLink: 'https://www.figma.com/proto/sample-sheltermax',
+    liveLink: 'https://sheltermax.com',
+    toolsUsed: ['Figma', 'Adobe Photoshop', 'Framer'],
+    tags: ['Corporate Website', 'Security', 'Trust Design', 'Framer'],
+    typography: {
+      headingFont: 'Playfair Display',
+      bodyFont: 'Inter',
+      sampleText: 'Uncompromising Protection For What Matters Most.'
+    },
+    colorPalette: [
+      { name: 'Monolith Dark', hex: '#0A0A0A' },
+      { name: 'Violet Accent', hex: '#6F3DFF' },
+      { name: 'Steel Surface', hex: '#141414' },
+      { name: 'Platinum Text', hex: '#FFFFFF' }
+    ],
+    featured: true
+  },
+  {
+    id: 'zenith-pay-app',
+    title: 'Zenith Pay',
+    category: 'Mobile App',
+    year: '2024',
+    clientName: 'Zenith Financial Tech',
+    coverImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80'
+    ],
+    shortDescription: 'A next-generation mobile banking experience prioritizing speed, biometrics, and effortless international transfers.',
+    problemStatement: 'Fintech apps are often cluttered with secondary ads and confusing menus. Users needed a frictionless 1-tap transfer experience.',
+    research: 'Interviews with 25 frequent remitters revealed 3 key steps: balance view, contact select, instant send.',
+    designProcess: [
+      { phase: 'Research', description: 'Remittance pain point analysis & biometric security UX.' },
+      { phase: 'UI Design', description: 'Dark high contrast mobile layouts with haptic feedback specs.' }
+    ],
+    wireframeImages: [],
+    uiScreens: ['https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80'],
+    prototypeLink: 'https://figma.com/proto/zenith-pay',
+    toolsUsed: ['Figma', 'Protopie'],
+    tags: ['Mobile App', 'Fintech', 'iOS UI', 'Android'],
+    featured: false
+  },
+  {
+    id: 'aura-design-system',
+    title: 'Aura Design System',
+    category: 'Branding',
+    year: '2024',
+    clientName: 'Aura Tech',
+    coverImage: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80'
+    ],
+    shortDescription: 'Scalable multi-platform design system with 200+ accessible components, tokens, and guidelines.',
+    problemStatement: 'Inconsistent design components across 4 cross-functional product teams led to bloated CSS and poor accessibility scores.',
+    research: 'Audited existing product repositories and unified color tokens, typographic scales, and spacing primitives.',
+    designProcess: [
+      { phase: 'Audit', description: 'Mapped 140 variant components down to 32 core primitives.' },
+      { phase: 'Tokenization', description: 'Set up Figma design tokens mapped directly to CSS variables.' }
+    ],
+    wireframeImages: [],
+    uiScreens: ['https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80'],
+    prototypeLink: 'https://figma.com/file/aura-ds',
+    toolsUsed: ['Figma', 'Tokens Studio', 'Storybook'],
+    tags: ['Design Systems', 'Tokens', 'Accessibility', 'Figma'],
+    featured: false
+  }
+];
+
+export const INITIAL_SKILLS: Skill[] = [
+  { name: 'UI/UX Design', percentage: 75, category: 'Core' },
+  { name: 'Figma', percentage: 80, category: 'Tools' },
+  { name: 'Adobe Photoshop', percentage: 90, category: 'Tools' },
+  { name: 'Web Designing', percentage: 80, category: 'Core' },
+  { name: 'Photo Editing & Mock-Ups', percentage: 85, category: 'Specialization' },
+  { name: 'Flyer & Graphic Arts', percentage: 85, category: 'Specialization' }
+];
+
+export const EXPERIENCE_TIMELINE: ExperienceItem[] = [
+  {
+    id: 'exp-1',
+    company: 'Tech Minds Venture',
+    role: 'UI/UX Designer',
+    period: '2023 — Currently (2 Years)',
+    description: 'I have been working in Tech Minds Venture for 2 Year i do different things related to Graphics such as UI/Designer. During my two-year tenure at Tech Minds Venture, I worked in a dynamic role handling a wide range of design responsibilities, with a primary focus on UI/UX Design. Throughout this experience, I strengthened my creative and technical skills while gaining valuable industry expertise. My time at Tech Minds Venture enabled me to develop a strong understanding of modern design principles and user-centered design techniques, allowing me to transform client ideas into visually appealing, intuitive, and user-friendly designs.',
+    achievements: [
+      'Transformed complex client ideas into visually appealing, intuitive, and user-friendly designs.',
+      'Handled a wide range of design responsibilities with a primary focus on UI/UX Design.',
+      'Developed a strong understanding of modern design principles & user-centered design techniques.'
+    ]
+  },
+  {
+    id: 'exp-2',
+    company: 'Freelance (Fiverr & Freelancer)',
+    role: 'UI/UX & Digital Design Freelancer',
+    period: '2022 — 2023',
+    description: 'I worked at Fiverr and Freelancer. I used to do Photo Editing, Web Designing, Flyer, and Mock-Up designs for global clients while maintaining high creative quality and customer satisfaction.',
+    achievements: [
+      'Delivered custom Photo Editing, Web Designing, Flyers, and Product Mock-Ups.',
+      'Collaborated directly with international clients on Fiverr and Freelancer platforms.'
+    ]
+  },
+  {
+    id: 'exp-3',
+    company: 'Arena Multimedia & INFO Channel',
+    role: 'Technological Design & Certifications',
+    period: '2019 — 2022',
+    description: 'Graphics Design At Arena Multi Media. Successfully completed UI/UX Design Course at Arena Multimedia and CIT Diploma at INFO Channel Pakistan.',
+    achievements: [
+      'Graphics Design At Arena Multi Media',
+      'UI/UX Design Course – Arena Multimedia',
+      'CIT Diploma – INFO Channel Pakistan'
+    ]
+  }
+];
+
+export const DESIGN_PROCESS_STEPS = [
+  {
+    step: '01',
+    title: 'Research',
+    subtitle: 'Understanding Users & Context',
+    description: 'Uncovering core user needs, competitive analysis, persona mapping, and business goal alignment.',
+    icon: 'Search'
+  },
+  {
+    step: '02',
+    title: 'Wireframe',
+    subtitle: 'Architecture & User Flow',
+    description: 'Translating research insights into low-fidelity structural layouts and frictionless information architecture.',
+    icon: 'Layout'
+  },
+  {
+    step: '03',
+    title: 'UI Design',
+    subtitle: 'High-Fidelity Aesthetics',
+    description: 'Crafting pixel-perfect interfaces with luxury dark themes, crisp typography, and cohesive color palettes.',
+    icon: 'Palette'
+  },
+  {
+    step: '04',
+    title: 'Prototype',
+    subtitle: 'Micro-Interactions & Motion',
+    description: 'Building interactive Figma prototypes to validate transition flows and micro-interactions.',
+    icon: 'MousePointer'
+  },
+  {
+    step: '05',
+    title: 'Testing',
+    subtitle: 'Usability & Accessibility Audits',
+    description: 'Conducting user testing, collecting feedback loops, and ensuring WCAG AA accessibility compliance.',
+    icon: 'CheckCircle'
+  },
+  {
+    step: '06',
+    title: 'Final Delivery',
+    subtitle: 'Developer Handoff & CMS Specs',
+    description: 'Preparing design token handoffs, asset exports, and Webflow / CMS publishing structures.',
+    icon: 'Send'
+  }
+];
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: 'test-1',
+    name: 'Hamza Khan',
+    role: 'Product Lead',
+    company: 'Tech Minds Venture',
+    content: 'Saad has an extraordinary eye for detail and visual elegance. His design systems streamlined our entire frontend development cycle and elevated our product aesthetic to match top tier international standards.',
+    rating: 5
+  },
+  {
+    id: 'test-2',
+    name: 'Elena Rostova',
+    role: 'Founder & CEO',
+    company: 'Noble Matrimony Inc.',
+    content: 'Working with Saad on Noble Matrimonial was an effortless experience. He took a complex, sensitive user journey and turned it into an intuitive, ultra-clean design that our users adore.',
+    rating: 5
+  },
+  {
+    id: 'test-3',
+    name: 'Marcus Vance',
+    role: 'Chief Technology Officer',
+    company: 'Fishinity Technologies',
+    content: 'The dashboard Saad designed for Fishinity Pro transformed our complex marine telemetry streams into actionable, beautiful data visualizations. Highly recommended designer.',
+    rating: 5
+  }
+];

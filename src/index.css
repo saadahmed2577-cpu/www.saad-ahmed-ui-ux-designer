@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-bebas {
+    font-family: 'Bebas Neue', 'Syne', sans-serif;
+  }
+  .font-serif-luxury {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  }
+  .font-sans-clean {
+    font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+  .bg-radial-luxury {
+    background: radial-gradient(circle at 50% 10%, rgba(217, 30, 42, 0.15) 0%, rgba(8, 8, 8, 0) 70%);
+  }
+  /* Luxury Universal Hover Animations & Magnetic Glow */
+  button, a, input, select, textarea, [role="button"], .glass-card, .hover-lift, [data-hover] {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  }
+
+  button:hover, a:hover, [role="button"]:hover {
+    transform: translateY(-2px) scale(1.025);
+  }
+
+  /* Universal Image Hover Reflection & Scale */
+  img {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+  }
+  .group:hover img, img:hover {
+    transform: scale(1.04);
+  }
+
+  .glass-card {
+    background: #111113;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
+  }
+  .glass-card-hover {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card:hover, .glass-card-hover:hover, [data-card]:hover {
+    border-color: rgba(217, 30, 42, 0.55) !important;
+    box-shadow: 0 16px 40px -12px rgba(217, 30, 42, 0.3), 0 0 25px rgba(217, 30, 42, 0.25) !important;
+    transform: translateY(-5px) scale(1.01) !important;
+  }
+  .text-glow-red {
+    text-shadow: 0 0 25px rgba(217, 30, 42, 0.5);
+  }
+  .bg-velvet-red {
+    background: linear-gradient(135deg, #7E0C15 0%, #4D050A 100%);
+  }
+
+  /* Tag & Badge Interactive Hover */
+  span.rounded-full, span.rounded-lg, span.rounded {
+    transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  }
+  span.rounded-full:hover, span.rounded-lg:hover, span.rounded:hover {
+    transform: translateY(-1px) scale(1.04);
+  }
+
+  /* Light Reflection Sweep Effect on Hovered Images */
+  .group\/img {
+    position: relative;
+    overflow: hidden;
+  }
+  .group\/img::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 50%, transparent 100%);
+    transform: skewX(-25deg);
+    transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .group\/img:hover::after {
+    left: 150%;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+::-webkit-scrollbar-thumb {
+  background: #1F1F22;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D91E2A;
+}
+
+/* Background Grid / Luxury Lines */
+.bg-grid-lines {
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.05); }
+}
+
+@keyframes testimonialMarquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 8s infinite ease-in-out;
+}
