@@ -78,7 +78,8 @@ export const AboutSection: React.FC = () => {
             <motion.div
               whileHover={{ y: -4, borderColor: 'rgba(217, 30, 42, 0.4)' }}
               whileTap={{ y: -2, scale: 0.99, borderColor: 'rgba(217, 30, 42, 0.7)' }}
-              className="glass-card p-8 sm:p-10 rounded-2xl relative overflow-hidden border border-white/10 transition-colors cursor-pointer"
+              data-glass="true"
+              className="glass-card crystal-glass p-8 sm:p-10 rounded-2xl relative overflow-hidden border border-white/10 transition-colors cursor-pointer"
             >
               <p className="font-sans-clean text-base sm:text-lg text-[#FFFFFF]/90 leading-relaxed font-normal mb-8">
                 Passionate UI/UX Designer with practical experience in creating clean, modern, and user-friendly designs for websites. Skilled in Figma and Adobe Photoshop, with the ability to understand client requirements and turn ideas into attractive and easy-to-use interfaces. Always eager to learn new design trends and improve creative skills to deliver better user experiences.
@@ -113,7 +114,8 @@ export const AboutSection: React.FC = () => {
                 whileHover={{ y: -8, scale: 1.02, borderColor: 'rgba(217, 30, 42, 0.5)' }}
                 whileTap={{ y: -3, scale: 0.97, borderColor: 'rgba(217, 30, 42, 0.8)' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="p-6 rounded-xl bg-[#111113] border border-white/[0.08] transition-colors cursor-pointer"
+                data-glass="true"
+                className="glass-card crystal-glass p-6 rounded-xl border border-white/[0.08] transition-colors cursor-pointer relative overflow-hidden"
               >
                 <div className="text-3xl font-bebas text-[#D91E2A] mb-1">01</div>
                 <h4 className="text-sm font-semibold text-white mb-1">Clarity First</h4>
@@ -124,7 +126,8 @@ export const AboutSection: React.FC = () => {
                 whileHover={{ y: -8, scale: 1.02, borderColor: 'rgba(217, 30, 42, 0.5)' }}
                 whileTap={{ y: -3, scale: 0.97, borderColor: 'rgba(217, 30, 42, 0.8)' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="p-6 rounded-xl bg-[#111113] border border-white/[0.08] transition-colors cursor-pointer"
+                data-glass="true"
+                className="glass-card crystal-glass p-6 rounded-xl border border-white/[0.08] transition-colors cursor-pointer relative overflow-hidden"
               >
                 <div className="text-3xl font-bebas text-[#D91E2A] mb-1">02</div>
                 <h4 className="text-sm font-semibold text-white mb-1">Visual Hierarchy</h4>
@@ -135,7 +138,8 @@ export const AboutSection: React.FC = () => {
                 whileHover={{ y: -8, scale: 1.02, borderColor: 'rgba(217, 30, 42, 0.5)' }}
                 whileTap={{ y: -3, scale: 0.97, borderColor: 'rgba(217, 30, 42, 0.8)' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="p-6 rounded-xl bg-[#111113] border border-white/[0.08] transition-colors cursor-pointer"
+                data-glass="true"
+                className="glass-card crystal-glass p-6 rounded-xl border border-white/[0.08] transition-colors cursor-pointer relative overflow-hidden"
               >
                 <div className="text-3xl font-bebas text-[#D91E2A] mb-1">03</div>
                 <h4 className="text-sm font-semibold text-white mb-1">Business Growth</h4>

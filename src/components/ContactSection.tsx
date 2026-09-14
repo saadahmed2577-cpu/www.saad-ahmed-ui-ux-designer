@@ -166,7 +166,7 @@ ${formData.message}`;
 
               {/* Location */}
               <motion.a
-                href="https://www.google.com/maps/place/Gulshan+E+Sheraz+Sector+6+A+Surjani+Town,+Karachi,+Pakistan/@25.0322865,67.0581988,14.79z"
+                href="https://www.google.com/maps/place/New+Karachi+Town,+Karachi,+Pakistan/@24.9914645,67.0436444,14z/data=!3m1!4b1!4m6!3m5!1s0x3eb3411d1b1aa5dd:0x7f8008a575c0b797!8m2!3d24.9930024!4d67.0650956!16zL20vMDlwMXlm?hl=en-US&entry=ttu"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ x: 6, borderColor: 'rgba(217, 30, 42, 0.6)' }}
@@ -182,7 +182,7 @@ ${formData.message}`;
                     <span className="text-[9px] text-[#D91E2A] font-semibold">(View on Google Maps)</span>
                   </div>
                   <div className="text-sm font-bold text-white group-hover:text-[#D91E2A] transition-colors flex items-center justify-between gap-1.5">
-                    <span className="truncate">Karachi, Gulshan E Sheraz, Sector 6A Surjani Town</span>
+                    <span className="truncate">New Karachi Town, Karachi, Pakistan</span>
                     <ArrowUpRight className="w-3.5 h-3.5 text-[#D91E2A] opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0" />
                   </div>
                 </div>

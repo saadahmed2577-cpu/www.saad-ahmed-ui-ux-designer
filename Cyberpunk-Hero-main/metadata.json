@@ -1,0 +1,6 @@
+{
+  "name": "Cyberpunk Hero",
+  "description": "A cyberpunk-style hero section featuring interactive spotlight reveal, parallax grid, and dynamic stats arcs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

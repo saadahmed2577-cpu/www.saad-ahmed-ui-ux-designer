@@ -9,12 +9,14 @@ import { SkillsSection } from './components/SkillsSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { DesignProcessSection } from './components/DesignProcessSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
+import { MapSection } from './components/MapSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { CaseStudyModal } from './components/CaseStudyModal';
 import { CmsAdminModal } from './components/CmsAdminModal';
 import { ScrollProgress } from './components/ScrollProgress';
 import { CursorGlow } from './components/CursorGlow';
+import { GlassCrackEffect } from './components/GlassCrackEffect';
 
 const STORAGE_KEY = 'saad_portfolio_projects_v1';
 
@@ -54,7 +56,7 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'process', 'testimonials', 'contact'];
+      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'process', 'testimonials', 'location', 'contact'];
       const scrollPos = window.scrollY + 200;
 
       for (const section of sections) {
@@ -93,6 +95,9 @@ export default function App() {
       {/* Hover-Only Cursor Follow Line */}
       <CursorGlow />
 
+      {/* Click-Only Glass Crack Animation Controller for Designated Glass Elements */}
+      <GlassCrackEffect />
+
       {/* Fixed Luxury Navigation */}
       <Navbar
         onOpenCms={handleOpenCms}
@@ -126,7 +131,10 @@ export default function App() {
         {/* 06 Testimonials */}
         <TestimonialsSection />
 
-        {/* 07 Contact Section */}
+        {/* 07 Studio Map & Global Reach */}
+        <MapSection />
+
+        {/* 08 Contact Section */}
         <ContactSection onOpenInbox={() => handleOpenCms('inquiries')} />
       </main>
 

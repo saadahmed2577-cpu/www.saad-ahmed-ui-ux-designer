@@ -147,14 +147,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCms, activeSection }) => {
   };
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Process', href: '#process' },
-    { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '#home', id: 'home' },
+    { name: 'About', href: '#about', id: 'about' },
+    { name: 'Experience', href: '#experience', id: 'experience' },
+    { name: 'Skills', href: '#skills', id: 'skills' },
+    { name: 'Projects', href: '#projects', id: 'projects' },
+    { name: 'Process', href: '#process', id: 'process' },
+    { name: 'Testimonials', href: '#testimonials', id: 'testimonials' },
+    { name: 'Location', href: '#location', id: 'location' },
+    { name: 'Contact', href: '#contact', id: 'contact' },
   ];
 
   return (
@@ -191,7 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCms, activeSection }) => {
         {/* Desktop Nav Links */}
         <nav className="hidden lg:flex items-center gap-4 xl:gap-6 bg-[#111113]/90 px-5 py-2.5 rounded-full border border-white/[0.08] backdrop-blur-md shadow-lg">
           {navLinks.map((link) => {
-            const isActive = activeSection === link.name.toLowerCase();
+            const isActive = activeSection === (link.id || link.name.toLowerCase());
             return (
               <a
                 key={link.name}

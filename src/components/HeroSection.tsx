@@ -1,44 +1,27 @@
-import React, { useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { ArrowDown, ArrowUpRight, Sparkles, ShieldCheck, Globe } from 'lucide-react';
+import React from 'react';
+import { motion, useMotionValue, useTransform } from 'motion/react';
+import { ArrowDown, ArrowUpRight, Sparkles } from 'lucide-react';
 import { AnimatedCounter } from './AnimatedCounter';
 import { SaadSignature } from './SaadSignature';
-
-import designerPortrait from '../assets/images/designer_portrait_1785797201150.jpg';
-import designerCutout from '../assets/images/designer_cutout_png_1785843666907.jpg';
-import saadCutout from '../assets/images/saad_cutout_png_1785843753308.jpg';
-import saadHeadshot from '../assets/images/saad_avatar_headshot_1785846847266.jpg';
-import regeneratedCutout from '../assets/images/regenerated_image_1785895097597.png';
+import { HeroSpotlightPortrait } from './HeroSpotlightPortrait';
 
 interface HeroSectionProps {
   onOpenCms: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCms }) => {
-  // 3D Parallax Tilt for Centered Cutout Image
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 200, damping: 25 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 200, damping: 25 });
+  const rotateX = useTransform(mouseY, [-300, 300], [8, -8]);
+  const rotateY = useTransform(mouseX, [-300, 300], [-8, 8]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSectionMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
     mouseX.set(x);
     mouseY.set(y);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (e.touches.length > 0) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const touch = e.touches[0];
-      const x = (touch.clientX - rect.left) / rect.width - 0.5;
-      const y = (touch.clientY - rect.top) / rect.height - 0.5;
-      mouseX.set(x * 1.5);
-      mouseY.set(y * 1.5);
-    }
   };
 
   const handleMouseLeave = () => {
@@ -49,7 +32,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCms }) => {
   const easing = [0.22, 1, 0.36, 1];
 
   return (
-    <section id="home" className="relative min-h-screen pt-28 pb-0 lg:pb-0 flex flex-col justify-center items-center overflow-hidden bg-[#080808] bg-radial-luxury">
+    <section 
+      id="home" 
+      onMouseMove={handleSectionMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-screen pt-28 pb-16 flex flex-col justify-between items-center overflow-hidden bg-[#080808] bg-radial-luxury"
+    >
       {/* Background Animated Lines & Red Ambient Breathing Glow */}
       <div className="absolute inset-0 bg-grid-lines pointer-events-none opacity-30" />
       <motion.div
@@ -70,10 +58,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCms }) => {
         </span>
       </motion.div>
 
-      <div className="relative max-w-[1600px] mx-auto px-6 sm:px-12 lg:px-16 w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      {/* Main Top Two Columns: Intro Text (Left) & Portrait (Right/Center) */}
+      <div className="relative max-w-[1700px] mx-auto px-6 sm:px-12 lg:px-16 w-full z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end flex-1">
         
         {/* Left Column: Intro Typography */}
-        <div className="lg:col-span-5 flex flex-col items-start pt-6 sm:pt-0">
+        <div className="lg:col-span-5 xl:col-span-5 flex flex-col items-start pt-6 sm:pt-0 pb-6 lg:pb-12 z-20">
           {/* Freelance Availability Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -87,71 +76,42 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCms }) => {
             </span>
           </motion.div>
 
-          {/* Hello I'm & Name with Blur Reveal */}
-          <div className="mb-2">
-            <motion.span
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: easing }}
-              className="font-serif-luxury italic text-[#D91E2A] text-2xl sm:text-3xl font-light block"
-            >
-              Hello, I'm
-            </motion.span>
-            <motion.h1
-              initial={{ opacity: 0, y: 40, filter: 'blur(14px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ duration: 0.9, delay: 0.2, ease: easing }}
-              className="font-bebas text-6xl sm:text-8xl lg:text-9xl font-black text-white leading-[0.85] tracking-tight mt-1 mb-3"
-            >
-              SAAD AHMED
-            </motion.h1>
-          </div>
+          {/* Designer Name & Roles */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: easing }}
+            className="font-bebas text-6xl sm:text-7xl lg:text-8xl tracking-tight leading-[0.9] text-white uppercase mb-4"
+          >
+            SAAD <span className="text-[#D91E2A]">AHMED</span>
+          </motion.h1>
 
-          {/* Role Subtitle & Signature */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35, ease: easing }}
-            className="flex flex-wrap items-center gap-4 mb-6"
+            transition={{ duration: 0.8, delay: 0.2, ease: easing }}
+            className="flex items-center gap-3 text-sm sm:text-base font-mono tracking-widest text-[#9A9A9A] uppercase mb-6"
           >
-            <div className="text-[#D91E2A] font-bold text-xs sm:text-sm tracking-[0.25em] uppercase flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#D91E2A]" />
-              <span>WEB DESIGNER & UI/UX CREATOR</span>
-            </div>
-            <div className="opacity-80 hover:opacity-100 transition-opacity">
-              <SaadSignature className="h-9 w-auto" />
-            </div>
+            <span className="text-white font-semibold">Senior UI/UX Designer</span>
+            <span className="text-[#D91E2A]">•</span>
+            <span>Design Engineer</span>
           </motion.div>
 
-          {/* Bio Description */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.45, ease: easing }}
-            className="font-sans-clean text-sm sm:text-base text-[#9A9A9A] leading-relaxed max-w-md mb-8"
+            transition={{ duration: 0.8, delay: 0.3, ease: easing }}
+            className="text-base sm:text-lg text-[#9A9A9A] max-w-xl font-light leading-relaxed mb-8 font-sans-clean"
           >
-            I design and build stylish, user-focused web experiences that combine creativity with strategy. Passionate about clean design, smooth interactions, and details that make a difference.
+            Crafting precise digital systems, high-conversion interfaces, and scalable component architectures with a luxury-tech dark aesthetic.
           </motion.p>
 
-          {/* Location / Status tag */}
+          {/* CTA Action Buttons & Signature */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.55, ease: easing }}
-            className="flex items-center gap-2 text-xs font-mono text-white/80 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full mb-8"
-          >
-            <Globe className="w-3.5 h-3.5 text-[#D91E2A]" />
-            <span>AVAILABLE WORLDWIDE</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span className="text-[#9A9A9A]">Karachi, PK</span>
-          </motion.div>
-
-          {/* Hero CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.65, ease: easing }}
-            className="flex flex-wrap items-center gap-4"
+            transition={{ duration: 0.8, delay: 0.4, ease: easing }}
+            className="flex flex-wrap items-center gap-4 w-full sm:w-auto"
           >
             <motion.a
               href="#projects"
@@ -173,57 +133,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCms }) => {
               <ArrowUpRight className="w-4 h-4 text-[#D91E2A]" />
             </motion.a>
           </motion.div>
-        </div>
 
-        {/* Center Column: Seamless Cutout Designer Portrait with 3D Tilt */}
-        <div className="lg:col-span-4 flex flex-col justify-end items-center relative z-10 mt-6 lg:mt-0 self-end">
           <motion.div
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleMouseLeave}
-            onTouchCancel={handleMouseLeave}
-            whileTap={{ scale: 0.98, rotateX: 5 }}
-            style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-            initial={{ opacity: 0, scale: 1.08 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.3, ease: easing }}
-            className="relative w-full max-w-[460px] sm:max-w-[560px] lg:max-w-[640px] flex justify-center items-end cursor-pointer perspective-1000 touch-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="mt-8"
           >
-            {/* Seamless Centered Cutout Image - Scaled Up & Clean */}
-            <motion.img
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              src={regeneratedCutout}
-              alt="Saad Ahmed — UI/UX Designer"
-              className="w-full h-auto max-h-[680px] sm:max-h-[780px] lg:max-h-[880px] xl:max-h-[960px] object-contain relative z-10 filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.75)] transition-transform duration-500 mb-0"
-              onError={(e) => {
-                const target = e.currentTarget;
-                if (target.src !== designerCutout) {
-                  target.src = designerCutout;
-                }
-              }}
-            />
+            <SaadSignature className="w-32 h-auto text-white/50 hover:text-white transition-colors" />
           </motion.div>
         </div>
 
-        {/* Right Column: Key Metrics & Quote Sparkle */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.5, ease: easing }}
-          className="lg:col-span-3 flex flex-col justify-center space-y-6 z-10"
-        >
-          {/* Sparkle Tag Card */}
+        {/* Right Column: Hero Spotlight Reveal Portrait */}
+        <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-end items-center lg:items-end relative z-10 mt-6 lg:mt-0 self-end overflow-visible">
+          <HeroSpotlightPortrait rotateX={rotateX} rotateY={rotateY} />
+        </div>
+
+      </div>
+
+      {/* Bottom Horizontal Row: Design Philosophy + Stats in a clean line */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6, ease: easing }}
+        className="relative max-w-[1600px] mx-auto px-6 sm:px-12 lg:px-16 w-full z-20 mt-10"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          
+          {/* Card 1: Design Philosophy */}
           <motion.div
-            whileHover={{ y: -6, scale: 1.02, borderColor: 'rgba(217,30,42,0.5)' }}
-            whileTap={{ y: -2, scale: 0.98, borderColor: 'rgba(217,30,42,0.8)' }}
-            className="p-5 rounded-2xl bg-[#111113] border border-white/10 relative overflow-hidden transition-colors cursor-pointer"
+            whileHover={{ y: -4, borderColor: 'rgba(217,30,42,0.5)' }}
+            whileTap={{ y: -2, scale: 0.98 }}
+            data-glass="true"
+            className="glass-card crystal-glass p-5 rounded-2xl border border-white/10 relative overflow-hidden transition-all cursor-pointer group flex flex-col justify-between"
           >
-            <div className="flex items-center gap-2 mb-2 text-[#D91E2A]">
-              <Sparkles className="w-4 h-4 animate-spin-slow" />
-              <span className="text-[10px] font-bold tracking-widest uppercase text-[#9A9A9A]">
-                Design Philosophy
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 text-[#D91E2A]">
+                <Sparkles className="w-4 h-4 animate-spin-slow" />
+                <span className="text-[10px] font-bold tracking-widest uppercase text-[#9A9A9A]">
+                  Design Philosophy
+                </span>
+              </div>
+              <span className="text-[9px] font-mono tracking-wider text-white/50 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full group-hover:text-white/80 transition-colors">
+                Crystal Glass
               </span>
             </div>
             <p className="text-xs text-white/90 leading-relaxed font-sans-clean">
@@ -231,49 +183,62 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCms }) => {
             </p>
           </motion.div>
 
-          {/* Big Stacked Stats with Animated Counters */}
-          <div className="p-6 rounded-2xl bg-[#111113] border border-white/10 space-y-6">
-            <motion.div whileHover={{ x: 4 }} whileTap={{ x: 6, scale: 0.98 }} className="transition-transform cursor-pointer">
-              <div className="text-4xl sm:text-5xl font-black font-bebas text-[#D91E2A] tracking-wider leading-none">
-                <AnimatedCounter value={3} suffix="+" />
-              </div>
-              <div className="text-xs font-bold text-white uppercase tracking-wider mt-1">
-                YEARS EXPERIENCE
-              </div>
-              <div className="text-[11px] text-[#9A9A9A] mt-0.5">
-                UI/UX, SaaS & Web Systems
-              </div>
-            </motion.div>
+          {/* Card 2: Years Experience */}
+          <motion.div
+            whileHover={{ y: -4, borderColor: 'rgba(217,30,42,0.5)' }}
+            whileTap={{ y: -2, scale: 0.98 }}
+            data-glass="true"
+            className="glass-card crystal-glass p-5 rounded-2xl border border-white/10 relative overflow-hidden transition-all cursor-pointer group"
+          >
+            <div className="text-4xl sm:text-5xl font-black font-bebas text-[#D91E2A] tracking-wider leading-none">
+              <AnimatedCounter value={3} suffix="+" />
+            </div>
+            <div className="text-xs font-bold text-white uppercase tracking-wider mt-2">
+              YEARS EXPERIENCE
+            </div>
+            <div className="text-[11px] text-[#9A9A9A] mt-0.5">
+              UI/UX, SaaS & Web Systems
+            </div>
+          </motion.div>
 
-            <motion.div whileHover={{ x: 4 }} whileTap={{ x: 6, scale: 0.98 }} className="pt-4 border-t border-white/[0.08] transition-transform cursor-pointer">
-              <div className="text-4xl sm:text-5xl font-black font-bebas text-[#D91E2A] tracking-wider leading-none">
-                <AnimatedCounter value={40} suffix="+" />
-              </div>
-              <div className="text-xs font-bold text-white uppercase tracking-wider mt-1">
-                PROJECTS COMPLETED
-              </div>
-              <div className="text-[11px] text-[#9A9A9A] mt-0.5">
-                Websites, Dashboards & Apps
-              </div>
-            </motion.div>
+          {/* Card 3: Projects Completed */}
+          <motion.div
+            whileHover={{ y: -4, borderColor: 'rgba(217,30,42,0.5)' }}
+            whileTap={{ y: -2, scale: 0.98 }}
+            data-glass="true"
+            className="glass-card crystal-glass p-5 rounded-2xl border border-white/10 relative overflow-hidden transition-all cursor-pointer group"
+          >
+            <div className="text-4xl sm:text-5xl font-black font-bebas text-[#D91E2A] tracking-wider leading-none">
+              <AnimatedCounter value={40} suffix="+" />
+            </div>
+            <div className="text-xs font-bold text-white uppercase tracking-wider mt-2">
+              PROJECTS COMPLETED
+            </div>
+            <div className="text-[11px] text-[#9A9A9A] mt-0.5">
+              Websites, Dashboards & Apps
+            </div>
+          </motion.div>
 
-            <motion.div whileHover={{ x: 4 }} whileTap={{ x: 6, scale: 0.98 }} className="pt-4 border-t border-white/[0.08] transition-transform cursor-pointer">
-              <div className="text-4xl sm:text-5xl font-black font-bebas text-[#D91E2A] tracking-wider leading-none">
-                <AnimatedCounter value={100} suffix="%" />
-              </div>
-              <div className="text-xs font-bold text-white uppercase tracking-wider mt-1">
-                HAPPY CLIENTS
-              </div>
-              <div className="text-[11px] text-[#9A9A9A] mt-0.5">
-                Global Freelance & Enterprise
-              </div>
-            </motion.div>
-          </div>
+          {/* Card 4: Happy Clients */}
+          <motion.div
+            whileHover={{ y: -4, borderColor: 'rgba(217,30,42,0.5)' }}
+            whileTap={{ y: -2, scale: 0.98 }}
+            data-glass="true"
+            className="glass-card crystal-glass p-5 rounded-2xl border border-white/10 relative overflow-hidden transition-all cursor-pointer group"
+          >
+            <div className="text-4xl sm:text-5xl font-black font-bebas text-[#D91E2A] tracking-wider leading-none">
+              <AnimatedCounter value={100} suffix="%" />
+            </div>
+            <div className="text-xs font-bold text-white uppercase tracking-wider mt-2">
+              HAPPY CLIENTS
+            </div>
+            <div className="text-[11px] text-[#9A9A9A] mt-0.5">
+              Global Freelance & Enterprise
+            </div>
+          </motion.div>
 
-        </motion.div>
-
-      </div>
+        </div>
+      </motion.div>
     </section>
   );
 };
-
