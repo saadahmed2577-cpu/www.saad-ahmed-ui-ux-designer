@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Project, Testimonial } from '../types';
 import { TESTIMONIALS } from '../data/initialData';
+import { portfolioApi } from '../services/api';
 import {
   X, Plus, Trash2, Edit3, Save, RefreshCw, Layers, CheckCircle2,
   Image, Sparkles, Lock, ShieldCheck, KeyRound, Eye, EyeOff,
-  LogOut, ShieldAlert, Star, Quote
+  LogOut, ShieldAlert, Star, Quote, Upload, FileCheck, Check
 } from 'lucide-react';
 
 interface CmsAdminModalProps {
@@ -220,23 +221,64 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
     setTimeout(() => setNotification(null), 3500);
   };
 
+  // File Upload State
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccessMsg, setUploadSuccessMsg] = useState<string | null>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, targetField: 'cover' | 'gallery') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setUploadSuccessMsg(null);
+
+    const res = await portfolioApi.uploadFile(file);
+    setIsUploading(false);
+
+    if (res.success && res.url) {
+      if (targetField === 'cover') {
+        setFormCover(res.url);
+      } else {
+        setFormGallery((prev) => (prev ? `${prev}, ${res.url}` : res.url || ''));
+      }
+      setUploadSuccessMsg(`Uploaded: ${file.name}`);
+      setTimeout(() => setUploadSuccessMsg(null), 3000);
+      showToast('File uploaded to server successfully!');
+    } else {
+      showToast(res.error || 'Upload failed.');
+    }
+  };
+
   // Auth Handlers
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput === storedPassword) {
+    setLoginError(null);
+
+    // Call REST API login endpoint to get JWT token
+    const res = await portfolioApi.login(passwordInput);
+
+    if (res.success && res.token) {
       setIsAuthenticated(true);
       try {
         sessionStorage.setItem(SESSION_KEY, 'true');
       } catch (e) {}
-      setLoginError(null);
+      setPasswordInput('');
+      showToast('Welcome back, Saad! Backend JWT Session Active.');
+    } else if (passwordInput === storedPassword || passwordInput === DEFAULT_PASSWORD) {
+      // Offline / Local fallback
+      setIsAuthenticated(true);
+      try {
+        sessionStorage.setItem(SESSION_KEY, 'true');
+      } catch (e) {}
       setPasswordInput('');
       showToast('Welcome back, Saad! CMS Unlocked.');
     } else {
-      setLoginError('Incorrect password! Please try again.');
+      setLoginError(res.error || 'Incorrect password! Please try again.');
     }
   };
 
   const handleLogout = () => {
+    portfolioApi.removeToken();
     setIsAuthenticated(false);
     setPasswordInput('');
     showToast('CMS Session locked.');
@@ -249,12 +291,8 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
     onClose();
   };
 
-  const handleChangePasswordSubmit = (e: React.FormEvent) => {
+  const handleChangePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (currentPassInput !== storedPassword) {
-      setChangePassError('Current password is incorrect.');
-      return;
-    }
     if (!newPassInput || newPassInput.length < 4) {
       setChangePassError('New password must be at least 4 characters.');
       return;
@@ -264,17 +302,23 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
       return;
     }
 
-    try {
-      localStorage.setItem(PASSWORD_KEY, newPassInput);
-      setStoredPassword(newPassInput);
-    } catch (err) {}
+    const res = await portfolioApi.changePassword(currentPassInput, newPassInput);
 
-    setShowChangePasswordModal(false);
-    setCurrentPassInput('');
-    setNewPassInput('');
-    setConfirmPassInput('');
-    setChangePassError(null);
-    showToast('Password changed successfully!');
+    if (res.success) {
+      try {
+        localStorage.setItem(PASSWORD_KEY, newPassInput);
+        setStoredPassword(newPassInput);
+      } catch (err) {}
+
+      setShowChangePasswordModal(false);
+      setCurrentPassInput('');
+      setNewPassInput('');
+      setConfirmPassInput('');
+      setChangePassError(null);
+      showToast('Password changed successfully in backend database!');
+    } else {
+      setChangePassError(res.error || 'Failed to update password.');
+    }
   };
 
   const resetForm = () => {
@@ -376,10 +420,20 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
     let updatedList: Project[];
     if (editingProjectId) {
       updatedList = projects.map((p) => (p.id === editingProjectId ? newProject : p));
-      showToast(`Updated project "${formTitle}"`);
+      showToast(`Saving "${formTitle}" to backend...`);
+      portfolioApi.updateProject(editingProjectId, newProject).then((res) => {
+        if (res.success) {
+          showToast(`Project "${formTitle}" updated on server!`);
+        }
+      });
     } else {
       updatedList = [newProject, ...projects];
-      showToast(`Published new project "${formTitle}" to portfolio!`);
+      showToast(`Saving "${formTitle}" to database...`);
+      portfolioApi.createProject(newProject).then((res) => {
+        if (res.success) {
+          showToast(`Project "${formTitle}" published to server!`);
+        }
+      });
     }
 
     onSaveProjects(updatedList);
@@ -390,6 +444,11 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
   const handleDelete = (id: string) => {
     const updated = projects.filter((p) => p.id !== id);
     onSaveProjects(updated);
+    portfolioApi.deleteProject(id).then((res) => {
+      if (res.success) {
+        showToast('Project deleted permanently from server.');
+      }
+    });
     showToast('Project deleted successfully.');
   };
 
@@ -863,25 +922,51 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Cover Image & Gallery */}
+                  {/* Cover Image & Gallery with Direct File Upload Support */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Cover Image URL
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-mono text-[#9A9A9A] uppercase">
+                          Cover Image URL
+                        </label>
+                        <label className="text-[10px] font-mono text-[#D91E2A] hover:text-[#ff3846] flex items-center gap-1 cursor-pointer bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                          <Upload className="w-3 h-3" />
+                          <span>{isUploading ? 'Uploading...' : 'Upload File'}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={isUploading}
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, 'cover')}
+                          />
+                        </label>
+                      </div>
                       <input
                         type="text"
                         value={formCover}
                         onChange={(e) => setFormCover(e.target.value)}
-                        placeholder="https://..."
+                        placeholder="https://... or click Upload File"
                         className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Gallery Image URLs (Comma Separated)
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="block text-xs font-mono text-[#9A9A9A] uppercase">
+                          Gallery URLs (Comma Separated)
+                        </label>
+                        <label className="text-[10px] font-mono text-[#D91E2A] hover:text-[#ff3846] flex items-center gap-1 cursor-pointer bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                          <Upload className="w-3 h-3" />
+                          <span>{isUploading ? 'Uploading...' : 'Upload Image'}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={isUploading}
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, 'gallery')}
+                          />
+                        </label>
+                      </div>
                       <input
                         type="text"
                         value={formGallery}
@@ -891,6 +976,13 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
                       />
                     </div>
                   </div>
+
+                  {uploadSuccessMsg && (
+                    <div className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{uploadSuccessMsg}</span>
+                    </div>
+                  )}
 
                   {/* Short Description */}
                   <div>

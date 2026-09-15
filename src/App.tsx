@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Project } from './types';
 import { INITIAL_PROJECTS } from './data/initialData';
+import { portfolioApi } from './services/api';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { AboutSection } from './components/AboutSection';
@@ -35,6 +36,23 @@ export default function App() {
     }
     return INITIAL_PROJECTS;
   });
+
+  // Real-time backend fetch
+  const refreshProjectsFromBackend = useCallback(async () => {
+    try {
+      const serverProjects = await portfolioApi.getProjects();
+      if (serverProjects && serverProjects.length > 0) {
+        setProjects(serverProjects);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(serverProjects));
+      }
+    } catch (err) {
+      console.warn('Real-time sync notice: Using cached portfolio projects');
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshProjectsFromBackend();
+  }, [refreshProjectsFromBackend]);
 
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<Project | null>(null);
   const [isCmsOpen, setIsCmsOpen] = useState(false);
