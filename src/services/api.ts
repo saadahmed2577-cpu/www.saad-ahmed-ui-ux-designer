@@ -71,6 +71,54 @@ export const portfolioApi = {
     }
   },
 
+  async forgotPassword(): Promise<{ success: boolean; message?: string; email?: string; phone?: string; error?: string }> {
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json();
+      return {
+        success: res.ok,
+        message: data.message,
+        email: data.email,
+        phone: data.phone,
+        error: data.error,
+      };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Failed to request OTP.' };
+    }
+  },
+
+  async verifyOtp(otp: string): Promise<{ success: boolean; message?: string; error?: string }> {
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ otp }),
+      });
+      const data = await res.json();
+      return { success: res.ok, message: data.message, error: data.error };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Failed to verify OTP.' };
+    }
+  },
+
+  async resetPassword(otp: string, newPassword: string): Promise<{ success: boolean; message?: string; error?: string }> {
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ otp, newPassword }),
+      });
+      const data = await res.json();
+      return { success: res.ok, message: data.message, error: data.error };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Failed to reset password.' };
+    }
+  },
+
   // Projects Endpoints
   async getProjects(): Promise<Project[]> {
     try {

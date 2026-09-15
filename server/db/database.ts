@@ -37,6 +37,8 @@ export interface InquiryMessage {
 export interface AdminUserConfig {
   username: string;
   passwordHash: string; // bcrypt hash
+  email?: string;
+  phone?: string;
   updatedAt: string;
 }
 

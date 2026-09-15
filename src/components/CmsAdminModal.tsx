@@ -6,7 +6,7 @@ import {
   X, Plus, Trash2, Edit3, Save, RefreshCw, Layers, CheckCircle2,
   Image, Sparkles, Lock, ShieldCheck, KeyRound, Eye, EyeOff,
   LogOut, ShieldAlert, Star, Quote, Upload, FileCheck, Check,
-  ChevronDown, ChevronUp, Zap
+  ChevronDown, ChevronUp, Zap, Mail, Phone, ArrowLeft, Send
 } from 'lucide-react';
 
 interface CmsAdminModalProps {
@@ -54,6 +54,16 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
   const [confirmPassInput, setConfirmPassInput] = useState('');
   const [changePassError, setChangePassError] = useState<string | null>(null);
   const [showNewPassToggle, setShowNewPassToggle] = useState(false);
+
+  // Forgot Password & OTP Flow State
+  const [showForgotPass, setShowForgotPass] = useState(false);
+  const [forgotStep, setForgotStep] = useState<'request' | 'verify' | 'newpass' | 'success'>('request');
+  const [otpInput, setOtpInput] = useState('');
+  const [forgotNewPass, setForgotNewPass] = useState('');
+  const [forgotConfirmPass, setForgotConfirmPass] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState<string | null>(null);
+  const [forgotInfo, setForgotInfo] = useState<{ email: string; phone: string } | null>(null);
 
   // CMS Content Tabs
   const [activeTab, setActiveTab] = useState<'list' | 'form' | 'inquiries' | 'reviews'>(initialTab);
@@ -320,6 +330,72 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
       showToast('Password changed successfully in backend database!');
     } else {
       setChangePassError(res.error || 'Failed to update password.');
+    }
+  };
+
+  const handleRequestOtp = async () => {
+    setForgotLoading(true);
+    setForgotError(null);
+    const res = await portfolioApi.forgotPassword();
+    setForgotLoading(false);
+    if (res.success) {
+      setForgotInfo({
+        email: res.email || 'saadahmed3803@gmail.com',
+        phone: res.phone || '+92 345 8273354',
+      });
+      setForgotStep('verify');
+      showToast('OTP sent to saadahmed3803@gmail.com!');
+    } else {
+      setForgotError(res.error || 'Failed to send OTP.');
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otpInput.trim()) {
+      setForgotError('Please enter the 6-digit OTP code.');
+      return;
+    }
+    setForgotLoading(true);
+    setForgotError(null);
+    const res = await portfolioApi.verifyOtp(otpInput.trim());
+    setForgotLoading(false);
+    if (res.success) {
+      setForgotStep('newpass');
+      showToast('OTP verified! Enter your new password.');
+    } else {
+      setForgotError(res.error || 'Invalid or expired OTP code.');
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (forgotNewPass.length < 4) {
+      setForgotError('New password must be at least 4 characters.');
+      return;
+    }
+    if (forgotNewPass !== forgotConfirmPass) {
+      setForgotError('Passwords do not match.');
+      return;
+    }
+    setForgotLoading(true);
+    setForgotError(null);
+    const res = await portfolioApi.resetPassword(otpInput.trim(), forgotNewPass);
+    setForgotLoading(false);
+    if (res.success) {
+      try {
+        localStorage.setItem(PASSWORD_KEY, forgotNewPass);
+        setStoredPassword(forgotNewPass);
+      } catch (err) {}
+      setForgotStep('success');
+      showToast('Password reset successfully!');
+      setTimeout(() => {
+        setShowForgotPass(false);
+        setForgotStep('request');
+        setPasswordInput(forgotNewPass);
+      }, 2500);
+    } else {
+      setForgotError(res.error || 'Failed to reset password.');
     }
   };
 
@@ -661,51 +737,259 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
               </div>
 
               {/* Security View 1: Password Login */}
-              <form onSubmit={handleLogin} className="space-y-4 bg-[#111113] p-6 rounded-2xl border border-white/10">
-                {loginError && (
-                  <div className="p-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 shrink-0" />
-                    <span>{loginError}</span>
-                  </div>
-                )}
+              {!showForgotPass ? (
+                <form onSubmit={handleLogin} className="space-y-4 bg-[#111113] p-6 rounded-2xl border border-white/10">
+                  {loginError && (
+                    <div className="p-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 shrink-0" />
+                      <span>{loginError}</span>
+                    </div>
+                  )}
 
-                <div>
-                  <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1.5 font-bold">
-                    Admin Security Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      value={passwordInput}
-                      onChange={(e) => setPasswordInput(e.target.value)}
-                      placeholder="Enter admin password..."
-                      className="w-full bg-[#080808] border border-white/10 rounded-xl pl-3.5 pr-10 py-3 text-sm text-white focus:outline-none focus:border-[#D91E2A] transition-colors"
-                    />
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase font-bold">
+                        Admin Security Password
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setForgotError(null);
+                          setShowForgotPass(true);
+                          setForgotStep('request');
+                        }}
+                        className="text-[11px] text-[#D91E2A] hover:underline font-semibold cursor-pointer"
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        value={passwordInput}
+                        onChange={(e) => setPasswordInput(e.target.value)}
+                        placeholder="Enter admin password..."
+                        className="w-full bg-[#080808] border border-white/10 rounded-xl pl-3.5 pr-10 py-3 text-sm text-white focus:outline-none focus:border-[#D91E2A] transition-colors"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9A9A9A] hover:text-white"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3 rounded-xl bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#c01823] transition-all shadow-[0_0_20px_rgba(217,30,42,0.4)] flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <KeyRound className="w-4 h-4" />
+                    <span>Unlock CMS Panel</span>
+                  </button>
+
+                  <div className="pt-2 flex items-center justify-between border-t border-white/5 text-[10px] text-[#9A9A9A] font-mono">
+                    <span>Default: <code className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">UI/UXSAQ</code></span>
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9A9A9A] hover:text-white"
+                      onClick={() => {
+                        setForgotError(null);
+                        setShowForgotPass(true);
+                        setForgotStep('request');
+                      }}
+                      className="text-[#D91E2A] hover:underline font-bold"
                     >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      OTP Reset Protocol →
                     </button>
                   </div>
-                </div>
+                </form>
+              ) : (
+                /* Forgot Password & OTP Flow View */
+                <div className="bg-[#111113] p-6 rounded-2xl border border-white/15 space-y-4 animate-fadeIn">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotPass(false);
+                        setForgotStep('request');
+                        setForgotError(null);
+                      }}
+                      className="text-xs text-[#9A9A9A] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back to Login</span>
+                    </button>
+                    <span className="text-[10px] font-mono uppercase bg-[#D91E2A]/20 text-[#D91E2A] px-2.5 py-0.5 rounded-full font-bold">
+                      OTP Security Protocol
+                    </span>
+                  </div>
 
-                <button
-                  type="submit"
-                  className="w-full py-3 rounded-xl bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#c01823] transition-all shadow-[0_0_20px_rgba(217,30,42,0.4)] flex items-center justify-center gap-2"
-                >
-                  <KeyRound className="w-4 h-4" />
-                  <span>Unlock CMS Panel</span>
-                </button>
+                  {forgotError && (
+                    <div className="p-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-semibold flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 shrink-0" />
+                      <span>{forgotError}</span>
+                    </div>
+                  )}
 
-                <div className="pt-2 text-center border-t border-white/5">
-                  <p className="text-[10px] text-[#9A9A9A] font-mono">
-                    Default Password: <code className="text-white font-bold bg-white/10 px-1.5 py-0.5 rounded">UI/UXSAQ</code>
-                  </p>
+                  {/* Step 1: Request OTP */}
+                  {forgotStep === 'request' && (
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-1">
+                          Recover Admin Password
+                        </h4>
+                        <p className="text-xs text-[#9A9A9A] leading-relaxed">
+                          A 6-digit security OTP will be dispatched to your registered contact channels:
+                        </p>
+                      </div>
+
+                      <div className="space-y-2 bg-[#080808] p-3.5 rounded-xl border border-white/5 text-xs font-mono">
+                        <div className="flex items-center gap-2 text-white">
+                          <Mail className="w-3.5 h-3.5 text-[#D91E2A]" />
+                          <span>saadahmed3803@gmail.com</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-white">
+                          <Phone className="w-3.5 h-3.5 text-[#D91E2A]" />
+                          <span>+92 345 8273354</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleRequestOtp}
+                        disabled={forgotLoading}
+                        className="w-full py-3 rounded-xl bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#c01823] transition-all shadow-[0_0_20px_rgba(217,30,42,0.4)] flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                      >
+                        <Send className="w-4 h-4" />
+                        <span>{forgotLoading ? 'Dispatching OTP...' : 'Send 6-Digit OTP Code'}</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Step 2: Verify OTP */}
+                  {forgotStep === 'verify' && (
+                    <form onSubmit={handleVerifyOtp} className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-1">
+                          Enter 6-Digit Security OTP
+                        </h4>
+                        <p className="text-xs text-[#9A9A9A] leading-relaxed">
+                          OTP has been generated for <span className="text-white font-mono">saadahmed3803@gmail.com</span> and <span className="text-white font-mono">+92 345 8273354</span>. Valid for 10 minutes.
+                        </p>
+                      </div>
+
+                      <div className="p-3.5 rounded-xl bg-[#080808] border border-white/10 text-xs text-[#9A9A9A] flex items-start gap-2.5">
+                        <Mail className="w-4 h-4 text-[#D91E2A] shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-white font-semibold block mb-0.5">OTP Auto-Dispatched to Gmail</span>
+                          Please check your inbox (<strong className="text-white font-mono">saadahmed3803@gmail.com</strong>) or Spam folder and enter the 6-digit code below.
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1 font-bold">
+                          6-Digit OTP Code
+                        </label>
+                        <input
+                          type="text"
+                          maxLength={6}
+                          required
+                          value={otpInput}
+                          onChange={(e) => setOtpInput(e.target.value)}
+                          placeholder="e.g. 583920"
+                          className="w-full bg-[#080808] border border-white/10 rounded-xl px-4 py-3 text-center text-lg font-mono tracking-widest text-white focus:outline-none focus:border-[#D91E2A]"
+                        />
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={handleRequestOtp}
+                          disabled={forgotLoading}
+                          className="w-1/3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-white hover:bg-white/10 transition-colors disabled:opacity-50 cursor-pointer"
+                        >
+                          Resend
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={forgotLoading || !otpInput.trim()}
+                          className="w-2/3 py-2.5 rounded-xl bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#c01823] transition-all shadow-[0_0_20px_rgba(217,30,42,0.4)] disabled:opacity-50 cursor-pointer"
+                        >
+                          {forgotLoading ? 'Verifying...' : 'Verify OTP'}
+                        </button>
+                      </div>
+                    </form>
+                  )}
+
+                  {/* Step 3: Enter New Password */}
+                  {forgotStep === 'newpass' && (
+                    <form onSubmit={handleResetPassword} className="space-y-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-1">
+                          Set New Admin Password
+                        </h4>
+                        <p className="text-xs text-[#9A9A9A]">
+                          OTP verified successfully. Create your new strong security password.
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1 font-bold">
+                          New Password (Min 4 chars)
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          value={forgotNewPass}
+                          onChange={(e) => setForgotNewPass(e.target.value)}
+                          placeholder="Enter new password..."
+                          className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1 font-bold">
+                          Confirm New Password
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          value={forgotConfirmPass}
+                          onChange={(e) => setForgotConfirmPass(e.target.value)}
+                          placeholder="Re-enter new password..."
+                          className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={forgotLoading || !forgotNewPass}
+                        className="w-full py-3 rounded-xl bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#c01823] transition-all shadow-[0_0_20px_rgba(217,30,42,0.4)] flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                      >
+                        <Save className="w-4 h-4" />
+                        <span>{forgotLoading ? 'Updating Password...' : 'Save New Password & Unlock'}</span>
+                      </button>
+                    </form>
+                  )}
+
+                  {/* Step 4: Success View */}
+                  {forgotStep === 'success' && (
+                    <div className="py-6 text-center space-y-3">
+                      <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
+                        <Check className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+                        Password Reset Successfully!
+                      </h4>
+                      <p className="text-xs text-[#9A9A9A]">
+                        Your password has been updated in the database. Returning to login...
+                      </p>
+                    </div>
+                  )}
                 </div>
-              </form>
+              )}
 
             </div>
           ) : (
