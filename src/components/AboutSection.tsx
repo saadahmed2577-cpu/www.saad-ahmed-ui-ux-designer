@@ -48,9 +48,7 @@ export const AboutSection: React.FC = () => {
 
             <div className="flex flex-col gap-3 text-xs font-mono text-[#9A9A9A]">
               <a
-                href="https://www.google.com/maps/place/Sector+5+A+2+New+Karachi+Town,+Karachi,+Pakistan/@25.0115222,67.0498116,14.83z/data=!4m6!3m5!1s0x3eb341110ccb6f63:0x2973b984eb83bd59!8m2!3d25.0039987!4d67.0620974!16s%2Fg%2F11hb1hg0n3?entry=ttu&g_ep=EgoyMDI2MDgwMi4wIKXMDSoASAFQAw%3D%3D"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#location"
                 className="flex items-center gap-3 group hover:text-white transition-colors cursor-pointer"
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-[#D91E2A] group-hover:scale-125 transition-transform" />

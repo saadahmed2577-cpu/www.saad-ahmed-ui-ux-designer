@@ -152,9 +152,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCms, activeSection }) => {
     { name: 'Experience', href: '#experience', id: 'experience' },
     { name: 'Skills', href: '#skills', id: 'skills' },
     { name: 'Projects', href: '#projects', id: 'projects' },
-    { name: 'Process', href: '#process', id: 'process' },
-    { name: 'Testimonials', href: '#testimonials', id: 'testimonials' },
-    { name: 'Location', href: '#location', id: 'location' },
+    { name: 'Reviews', href: '#testimonials', id: 'testimonials' },
+    { name: 'FAQ', href: '#faq', id: 'faq' },
     { name: 'Contact', href: '#contact', id: 'contact' },
   ];
 

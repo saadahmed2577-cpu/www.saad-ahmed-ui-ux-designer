@@ -62,16 +62,17 @@ export const Footer: React.FC<FooterProps> = ({ onOpenInbox }) => {
             <a href="#process" className="text-xs font-bold uppercase tracking-wider text-[#9A9A9A] hover:text-white transition-colors">
               Process
             </a>
+            <a href="#faq" className="text-xs font-bold uppercase tracking-wider text-[#9A9A9A] hover:text-white transition-colors">
+              FAQ
+            </a>
             <a href="#contact" className="text-xs font-bold uppercase tracking-wider text-[#9A9A9A] hover:text-white transition-colors">
               Contact
             </a>
             <a
-              href="https://wa.me/923458273354"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#contact"
               className="text-xs font-bold uppercase tracking-wider text-[#D91E2A] hover:text-white transition-colors"
             >
-              WhatsApp
+              WhatsApp (+92 345 8273354)
             </a>
 
             <motion.button

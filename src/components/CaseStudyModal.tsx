@@ -5,9 +5,10 @@ import { X, ExternalLink, Figma, CheckCircle, ArrowRight, Maximize2, Layers, Cpu
 interface CaseStudyModalProps {
   project: Project | null;
   onClose: () => void;
+  onOpenPreview?: (url: string, title: string) => void;
 }
 
-export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ project, onClose }) => {
+export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ project, onClose, onOpenPreview }) => {
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
   if (!project) return null;
@@ -213,26 +214,32 @@ export const CaseStudyModal: React.FC<CaseStudyModalProps> = ({ project, onClose
           <div className="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-white/10">
             <div className="flex items-center gap-3">
               {project.prototypeLink && (
-                <a
-                  href={project.prototypeLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 rounded-full bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-[#c01823] transition-colors shadow-[0_0_20px_rgba(217,30,42,0.4)]"
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenPreview && project.prototypeLink) {
+                      onOpenPreview(project.prototypeLink, `${project.title} - Figma Prototype`);
+                    }
+                  }}
+                  className="px-6 py-3 rounded-full bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-[#c01823] transition-colors shadow-[0_0_20px_rgba(217,30,42,0.4)] cursor-pointer"
                 >
                   <Figma className="w-4 h-4" />
                   <span>Figma Prototype</span>
-                </a>
+                </button>
               )}
               {project.liveLink && (
-                <a
-                  href={project.liveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-3 rounded-full bg-[#111113] border border-white/10 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-white/10 transition-colors"
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onOpenPreview && project.liveLink) {
+                      onOpenPreview(project.liveLink, `${project.title} - Live Website`);
+                    }
+                  }}
+                  className="px-6 py-3 rounded-full bg-[#111113] border border-white/10 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 hover:bg-white/10 transition-colors cursor-pointer"
                 >
                   <ExternalLink className="w-4 h-4 text-[#D91E2A]" />
                   <span>Visit Live Website</span>
-                </a>
+                </button>
               )}
             </div>
 

@@ -10,11 +10,13 @@ import { SkillsSection } from './components/SkillsSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { DesignProcessSection } from './components/DesignProcessSection';
 import { TestimonialsSection } from './components/TestimonialsSection';
+import { FaqSection } from './components/FaqSection';
 import { MapSection } from './components/MapSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { CaseStudyModal } from './components/CaseStudyModal';
 import { CmsAdminModal } from './components/CmsAdminModal';
+import { InPageBrowserModal } from './components/InPageBrowserModal';
 import { ScrollProgress } from './components/ScrollProgress';
 import { CursorGlow } from './components/CursorGlow';
 import { GlassCrackEffect } from './components/GlassCrackEffect';
@@ -55,9 +57,14 @@ export default function App() {
   }, [refreshProjectsFromBackend]);
 
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<Project | null>(null);
+  const [activePreview, setActivePreview] = useState<{ url: string; title: string } | null>(null);
   const [isCmsOpen, setIsCmsOpen] = useState(false);
   const [cmsTab, setCmsTab] = useState<'list' | 'form' | 'inquiries'>('list');
   const [activeSection, setActiveSection] = useState('about');
+
+  const handleOpenPreview = (url: string, title: string) => {
+    setActivePreview({ url, title });
+  };
 
   const handleOpenCms = (tab: 'list' | 'form' | 'inquiries' = 'list') => {
     setCmsTab(tab);
@@ -74,7 +81,7 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'process', 'testimonials', 'location', 'contact'];
+      const sections = ['home', 'about', 'experience', 'skills', 'projects', 'process', 'testimonials', 'faq', 'location', 'contact'];
       const scrollPos = window.scrollY + 200;
 
       for (const section of sections) {
@@ -136,23 +143,27 @@ export default function App() {
         {/* 04 Core Skills & Capabilities */}
         <SkillsSection />
 
-        {/* 04 Featured Projects Showcase */}
+        {/* 05 Featured Projects Showcase */}
         <ProjectsSection
           projects={projects}
           onSelectProject={(project) => setSelectedCaseStudy(project)}
           onOpenCms={() => handleOpenCms('list')}
+          onOpenPreview={handleOpenPreview}
         />
 
-        {/* 05 Design Process Workflow */}
+        {/* 06 Design Process Workflow */}
         <DesignProcessSection />
 
-        {/* 06 Testimonials */}
+        {/* 08 Testimonials */}
         <TestimonialsSection />
 
-        {/* 07 Studio Map & Global Reach */}
+        {/* 09 Frequently Asked Questions (FAQ) */}
+        <FaqSection />
+
+        {/* 10 Studio Map & Global Reach */}
         <MapSection />
 
-        {/* 08 Contact Section */}
+        {/* 11 Contact Section */}
         <ContactSection onOpenInbox={() => handleOpenCms('inquiries')} />
       </main>
 
@@ -163,6 +174,14 @@ export default function App() {
       <CaseStudyModal
         project={selectedCaseStudy}
         onClose={() => setSelectedCaseStudy(null)}
+        onOpenPreview={handleOpenPreview}
+      />
+
+      {/* In-Page Browser Modal to keep browsing inside portfolio website */}
+      <InPageBrowserModal
+        url={activePreview?.url || null}
+        title={activePreview?.title}
+        onClose={() => setActivePreview(null)}
       />
 
       {/* CMS Project Upload & Management Modal */}

@@ -271,7 +271,7 @@ export const TestimonialsSection: React.FC = () => {
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#111113] border border-[#D91E2A]/30 mb-4">
               <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
               <span className="text-[10px] font-mono tracking-widest text-[#D91E2A] font-bold uppercase">
-                LIVE CLIENT REVIEWS & TESTIMONIALS
+                LIVE CLIENT REVIEWS
               </span>
             </div>
             <h2 className="font-bebas text-4xl sm:text-6xl font-bold tracking-tight text-white uppercase">

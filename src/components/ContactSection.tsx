@@ -124,9 +124,7 @@ ${formData.message}`;
               
               {/* Email */}
               <motion.a
-                href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#sent?compose=new"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="mailto:saadahmed3803@gmail.com"
                 whileHover={{ x: 6, borderColor: 'rgba(217, 30, 42, 0.6)' }}
                 whileTap={{ x: 8, scale: 0.98, borderColor: 'rgba(217, 30, 42, 0.8)' }}
                 className="flex items-center gap-4 p-4 rounded-xl bg-[#111113] border border-white/10 transition-colors group cursor-pointer"
@@ -145,9 +143,7 @@ ${formData.message}`;
 
               {/* Phone */}
               <motion.a
-                href="https://wa.me/923458273354"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="tel:+923458273354"
                 whileHover={{ x: 6, borderColor: 'rgba(217, 30, 42, 0.6)' }}
                 whileTap={{ x: 8, scale: 0.98, borderColor: 'rgba(217, 30, 42, 0.8)' }}
                 className="flex items-center gap-4 p-4 rounded-xl bg-[#111113] border border-white/10 transition-colors group cursor-pointer"
@@ -166,9 +162,7 @@ ${formData.message}`;
 
               {/* Location */}
               <motion.a
-                href="https://www.google.com/maps/place/New+Karachi+Town,+Karachi,+Pakistan/@24.9914645,67.0436444,14z/data=!3m1!4b1!4m6!3m5!1s0x3eb3411d1b1aa5dd:0x7f8008a575c0b797!8m2!3d24.9930024!4d67.0650956!16zL20vMDlwMXlm?hl=en-US&entry=ttu"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#location"
                 whileHover={{ x: 6, borderColor: 'rgba(217, 30, 42, 0.6)' }}
                 whileTap={{ x: 8, scale: 0.98, borderColor: 'rgba(217, 30, 42, 0.8)' }}
                 className="flex items-center gap-4 p-4 rounded-xl bg-[#111113] border border-white/10 transition-colors group cursor-pointer"
@@ -179,7 +173,7 @@ ${formData.message}`;
                 <div className="flex-1 min-w-0">
                   <div className="text-[10px] font-mono text-[#9A9A9A] uppercase font-bold flex items-center gap-1.5">
                     <span>Address / Location</span>
-                    <span className="text-[9px] text-[#D91E2A] font-semibold">(View on Google Maps)</span>
+                    <span className="text-[9px] text-[#D91E2A] font-semibold">(View On Studio Map)</span>
                   </div>
                   <div className="text-sm font-bold text-white group-hover:text-[#D91E2A] transition-colors flex items-center justify-between gap-1.5">
                     <span className="truncate">New Karachi Town, Karachi, Pakistan</span>

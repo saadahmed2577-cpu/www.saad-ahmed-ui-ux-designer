@@ -7,12 +7,14 @@ interface ProjectsSectionProps {
   projects: Project[];
   onSelectProject: (project: Project) => void;
   onOpenCms: () => void;
+  onOpenPreview?: (url: string, title: string) => void;
 }
 
 export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   projects,
   onSelectProject,
-  onOpenCms
+  onOpenCms,
+  onOpenPreview
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -200,17 +202,22 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
                     </motion.button>
 
                     {project.liveLink && (
-                      <motion.a
-                        href={project.liveLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <motion.button
+                        type="button"
+                        onClick={() => {
+                          if (onOpenPreview && project.liveLink) {
+                            onOpenPreview(project.liveLink, project.title);
+                          } else {
+                            onSelectProject(project);
+                          }
+                        }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className="p-3 rounded-lg bg-[#111113] border border-white/10 hover:border-[#D91E2A] text-[#D91E2A] hover:text-white transition-all flex items-center justify-center shrink-0 cursor-pointer"
-                        title="Open Live Website in Browser"
+                        title="Open Live Preview in Portfolio"
                       >
                         <ExternalLink className="w-4 h-4" />
-                      </motion.a>
+                      </motion.button>
                     )}
                   </div>
                 </motion.div>

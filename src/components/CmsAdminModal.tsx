@@ -5,7 +5,8 @@ import { portfolioApi } from '../services/api';
 import {
   X, Plus, Trash2, Edit3, Save, RefreshCw, Layers, CheckCircle2,
   Image, Sparkles, Lock, ShieldCheck, KeyRound, Eye, EyeOff,
-  LogOut, ShieldAlert, Star, Quote, Upload, FileCheck, Check
+  LogOut, ShieldAlert, Star, Quote, Upload, FileCheck, Check,
+  ChevronDown, ChevronUp, Zap
 } from 'lucide-react';
 
 interface CmsAdminModalProps {
@@ -213,6 +214,7 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
   const [formLive, setFormLive] = useState('');
   const [formTools, setFormTools] = useState('');
   const [formTags, setFormTags] = useState('');
+  const [showAdvancedFields, setShowAdvancedFields] = useState(false);
 
   const [notification, setNotification] = useState<string | null>(null);
 
@@ -844,44 +846,52 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
 
               {/* TAB 2: Add / Edit Project Form */}
               {activeTab === 'form' && (
-                <form onSubmit={handleSaveForm} className="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
-                  <div className="flex justify-between items-center bg-[#111113] p-3 rounded-xl border border-white/5">
-                    <span className="text-xs font-mono font-bold text-[#D91E2A]">
-                      {editingProjectId ? 'EDITING PROJECT' : 'NEW PROJECT UPLOAD FORM'}
-                    </span>
+                <form onSubmit={handleSaveForm} className="space-y-5 max-h-[65vh] overflow-y-auto pr-2">
+                  {/* Easy Mode Banner */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 bg-[#121216] p-3.5 rounded-xl border border-white/10">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#D91E2A] animate-pulse"></span>
+                      <span className="text-xs font-mono font-bold text-white tracking-wide">
+                        {editingProjectId ? 'EDITING PROJECT' : 'EASY PROJECT UPLOAD'}
+                      </span>
+                      <span className="text-[11px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-mono">
+                        Simple Mode
+                      </span>
+                    </div>
                     <button
                       type="button"
                       onClick={handleLoadSample}
-                      className="text-xs text-[#9A9A9A] hover:text-white underline"
+                      className="text-xs font-mono text-[#D91E2A] hover:text-[#ff3846] flex items-center gap-1 transition-colors"
                     >
-                      Load Pre-filled Sample Data
+                      <Zap className="w-3.5 h-3.5" />
+                      <span>Auto-fill Sample</span>
                     </button>
                   </div>
 
-                  {/* Title & Category */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Project Title *
+                  {/* 1. ESSENTIAL: Project Title & Category */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-mono text-[#E0E0E0] uppercase mb-1 font-semibold">
+                        1. Project Name / Title *
                       </label>
                       <input
                         type="text"
                         required
                         value={formTitle}
                         onChange={(e) => setFormTitle(e.target.value)}
-                        placeholder="e.g. Noble Matrimonial"
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                        placeholder="e.g. Modern E-commerce App"
+                        className="w-full bg-[#0D0D10] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#D91E2A] focus:ring-1 focus:ring-[#D91E2A]"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
+                      <label className="block text-xs font-mono text-[#E0E0E0] uppercase mb-1 font-semibold">
                         Category *
                       </label>
                       <select
                         value={formCategory}
                         onChange={(e) => setFormCategory(e.target.value as any)}
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                        className="w-full bg-[#0D0D10] border border-white/15 rounded-xl px-3 py-3 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
                       >
                         <option value="Website Design">Website Design</option>
                         <option value="Dashboard Design">Dashboard Design</option>
@@ -893,216 +903,233 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Year & Client */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Year
+                  {/* 2. ESSENTIAL: Cover Image with Big Easy Upload Box */}
+                  <div>
+                    <label className="block text-xs font-mono text-[#E0E0E0] uppercase mb-1.5 font-semibold">
+                      2. Project Image / Screenshot (Photo)
+                    </label>
+                    <div className="p-3.5 bg-[#0D0D10] border border-white/15 rounded-xl flex flex-col sm:flex-row items-center gap-3">
+                      <label className="w-full sm:w-auto cursor-pointer bg-[#D91E2A] hover:bg-[#c01823] text-white text-xs font-bold px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors shrink-0 shadow-[0_0_15px_rgba(217,30,42,0.3)]">
+                        <Upload className="w-4 h-4" />
+                        <span>{isUploading ? 'Uploading Image...' : 'Choose Image From PC / Phone'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          disabled={isUploading}
+                          className="hidden"
+                          onChange={(e) => handleFileUpload(e, 'cover')}
+                        />
                       </label>
-                      <input
-                        type="text"
-                        value={formYear}
-                        onChange={(e) => setFormYear(e.target.value)}
-                        placeholder="2026"
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Client Name (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={formClient}
-                        onChange={(e) => setFormClient(e.target.value)}
-                        placeholder="e.g. Noble Matrimony Inc."
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Cover Image & Gallery with Direct File Upload Support */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="block text-xs font-mono text-[#9A9A9A] uppercase">
-                          Cover Image URL
-                        </label>
-                        <label className="text-[10px] font-mono text-[#D91E2A] hover:text-[#ff3846] flex items-center gap-1 cursor-pointer bg-white/5 px-2 py-0.5 rounded border border-white/10">
-                          <Upload className="w-3 h-3" />
-                          <span>{isUploading ? 'Uploading...' : 'Upload File'}</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            disabled={isUploading}
-                            className="hidden"
-                            onChange={(e) => handleFileUpload(e, 'cover')}
-                          />
-                        </label>
-                      </div>
+                      <span className="text-xs text-[#8A8A8A] font-mono">ya direct link daalen:</span>
                       <input
                         type="text"
                         value={formCover}
                         onChange={(e) => setFormCover(e.target.value)}
-                        placeholder="https://... or click Upload File"
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                        placeholder="https://images.unsplash.com/... (optional)"
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-[#D91E2A]"
                       />
                     </div>
 
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="block text-xs font-mono text-[#9A9A9A] uppercase">
-                          Gallery URLs (Comma Separated)
-                        </label>
-                        <label className="text-[10px] font-mono text-[#D91E2A] hover:text-[#ff3846] flex items-center gap-1 cursor-pointer bg-white/5 px-2 py-0.5 rounded border border-white/10">
-                          <Upload className="w-3 h-3" />
-                          <span>{isUploading ? 'Uploading...' : 'Upload Image'}</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            disabled={isUploading}
-                            className="hidden"
-                            onChange={(e) => handleFileUpload(e, 'gallery')}
-                          />
-                        </label>
+                    {formCover && (
+                      <div className="mt-2 flex items-center gap-3 p-2 bg-white/5 rounded-lg border border-white/10">
+                        <img
+                          src={formCover}
+                          alt="Preview"
+                          className="w-14 h-10 object-cover rounded border border-white/10"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                        <span className="text-[11px] text-emerald-400 font-mono flex items-center gap-1">
+                          <Check className="w-3.5 h-3.5" /> Image ready
+                        </span>
                       </div>
-                      <input
-                        type="text"
-                        value={formGallery}
-                        onChange={(e) => setFormGallery(e.target.value)}
-                        placeholder="https://img1, https://img2"
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
+                    )}
                   </div>
 
-                  {uploadSuccessMsg && (
-                    <div className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
-                      <Check className="w-3.5 h-3.5" />
-                      <span>{uploadSuccessMsg}</span>
-                    </div>
-                  )}
-
-                  {/* Short Description */}
+                  {/* 3. ESSENTIAL: Short Description */}
                   <div>
-                    <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                      Short Description *
+                    <label className="block text-xs font-mono text-[#E0E0E0] uppercase mb-1 font-semibold">
+                      3. Short Description (2 Lines) *
                     </label>
                     <textarea
                       required
                       rows={2}
                       value={formShortDesc}
                       onChange={(e) => setFormShortDesc(e.target.value)}
-                      placeholder="Designed a modern platform focused on simplicity..."
-                      className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                      placeholder="e.g. Designed a clean, modern landing page with high conversion and responsive layout."
+                      className="w-full bg-[#0D0D10] border border-white/15 rounded-xl px-4 py-2.5 text-xs text-white placeholder:text-white/30 focus:outline-none focus:border-[#D91E2A]"
                     />
                   </div>
 
-                  {/* Problem & Research */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Problem Statement
-                      </label>
-                      <textarea
-                        rows={3}
-                        value={formProblem}
-                        onChange={(e) => setFormProblem(e.target.value)}
-                        placeholder="Describe the challenge solved..."
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
+                  {uploadSuccessMsg && (
+                    <div className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 rounded-xl flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5" />
+                      <span>{uploadSuccessMsg}</span>
                     </div>
+                  )}
 
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Research Insights
-                      </label>
-                      <textarea
-                        rows={3}
-                        value={formResearch}
-                        onChange={(e) => setFormResearch(e.target.value)}
-                        placeholder="User interviews and findings..."
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
+                  {/* OPTIONAL ACCORDION: Additional Details */}
+                  <div className="border border-white/10 rounded-xl overflow-hidden bg-black/20">
+                    <button
+                      type="button"
+                      onClick={() => setShowAdvancedFields(!showAdvancedFields)}
+                      className="w-full px-4 py-3 bg-white/5 hover:bg-white/[0.08] flex items-center justify-between text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-mono font-medium text-white/90">
+                          {showAdvancedFields ? 'Hide Extra Details' : '+ Add Extra Details (Optional / Zaruri nahi hai)'}
+                        </span>
+                        <span className="text-[10px] text-[#888] font-mono">
+                          (Year, Links, Client, Tools, Case Study)
+                        </span>
+                      </div>
+                      {showAdvancedFields ? (
+                        <ChevronUp className="w-4 h-4 text-[#9A9A9A]" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-[#9A9A9A]" />
+                      )}
+                    </button>
+
+                    {showAdvancedFields && (
+                      <div className="p-4 space-y-4 border-t border-white/10">
+                        {/* Year & Client */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Year (Default: 2026)
+                            </label>
+                            <input
+                              type="text"
+                              value={formYear}
+                              onChange={(e) => setFormYear(e.target.value)}
+                              placeholder="2026"
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Client Name
+                            </label>
+                            <input
+                              type="text"
+                              value={formClient}
+                              onChange={(e) => setFormClient(e.target.value)}
+                              placeholder="e.g. Noble Matrimony Inc."
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Figma & Live Links */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Figma Prototype Link
+                            </label>
+                            <input
+                              type="text"
+                              value={formPrototype}
+                              onChange={(e) => setFormPrototype(e.target.value)}
+                              placeholder="https://figma.com/proto/..."
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Live Website Link
+                            </label>
+                            <input
+                              type="text"
+                              value={formLive}
+                              onChange={(e) => setFormLive(e.target.value)}
+                              placeholder="https://..."
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Tools & Tags */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Tools Used
+                            </label>
+                            <input
+                              type="text"
+                              value={formTools}
+                              onChange={(e) => setFormTools(e.target.value)}
+                              placeholder="Figma, Adobe Photoshop"
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Tags
+                            </label>
+                            <input
+                              type="text"
+                              value={formTags}
+                              onChange={(e) => setFormTags(e.target.value)}
+                              placeholder="UX Case Study, UI Design"
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Case Study Details */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Problem Statement
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={formProblem}
+                              onChange={(e) => setFormProblem(e.target.value)}
+                              placeholder="Describe the challenge solved..."
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-mono text-[#9A9A9A] uppercase mb-1">
+                              Research Insights
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={formResearch}
+                              onChange={(e) => setFormResearch(e.target.value)}
+                              placeholder="User research findings..."
+                              className="w-full bg-[#080808] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Figma Prototype & Live Link */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Figma Prototype Link
-                      </label>
-                      <input
-                        type="text"
-                        value={formPrototype}
-                        onChange={(e) => setFormPrototype(e.target.value)}
-                        placeholder="https://figma.com/proto/..."
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Live Website Link
-                      </label>
-                      <input
-                        type="text"
-                        value={formLive}
-                        onChange={(e) => setFormLive(e.target.value)}
-                        placeholder="https://..."
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Tools & Tags */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Tools Used (Comma Separated)
-                      </label>
-                      <input
-                        type="text"
-                        value={formTools}
-                        onChange={(e) => setFormTools(e.target.value)}
-                        placeholder="Figma, Adobe Photoshop, FigJam"
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-mono text-[#9A9A9A] uppercase mb-1">
-                        Tags (Comma Separated)
-                      </label>
-                      <input
-                        type="text"
-                        value={formTags}
-                        onChange={(e) => setFormTags(e.target.value)}
-                        placeholder="UX Case Study, Matrimonial, Design System"
-                        className="w-full bg-[#080808] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#D91E2A]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+                  {/* Actions */}
+                  <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
                     <button
                       type="button"
                       onClick={() => {
                         resetForm();
                         setActiveTab('list');
                       }}
-                      className="px-5 py-2.5 rounded-xl bg-white/5 text-xs font-medium text-[#9A9A9A] hover:text-white"
+                      className="px-4 py-2.5 rounded-xl bg-white/5 text-xs font-medium text-[#9A9A9A] hover:text-white"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#c01823] transition-colors flex items-center gap-2 shadow-[0_0_15px_rgba(217,30,42,0.4)]"
+                      className="px-7 py-3 rounded-xl bg-[#D91E2A] text-white text-xs font-bold uppercase tracking-wider hover:bg-[#c01823] transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(217,30,42,0.5)]"
                     >
                       <Save className="w-4 h-4" />
-                      <span>{editingProjectId ? 'Update Project' : 'Publish to Portfolio'}</span>
+                      <span>{editingProjectId ? 'Update Project' : 'Save & Publish to Portfolio'}</span>
                     </button>
                   </div>
                 </form>
@@ -1209,8 +1236,6 @@ export const CmsAdminModal: React.FC<CmsAdminModalProps> = ({
                           <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px]">
                             <a
                               href={`https://api.whatsapp.com/send?phone=923458273354&text=${encodeURIComponent(`Hello ${inq.name}! Re: ${inq.service} project inquiry.`)}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
                               className="px-3.5 py-1.5 rounded-lg bg-[#25D366] text-black font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 hover:bg-[#20bd5a] transition-all"
                             >
                               <span>Reply on WhatsApp (+92 345 8273354)</span>

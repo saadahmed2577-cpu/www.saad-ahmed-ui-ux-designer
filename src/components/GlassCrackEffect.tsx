@@ -45,8 +45,10 @@ export class GlassCrackSystem {
   states: GlassCrackState[] = [];
   globalState: GlassCrackState | null = null;
   private resizeHandlers: Array<() => void> = [];
-  private mousedownHandler: ((e: MouseEvent) => void) | null = null;
-  private touchstartHandler: ((e: TouchEvent) => void) | null = null;
+  private dblclickHandler: ((e: MouseEvent) => void) | null = null;
+  private touchHandler: ((e: TouchEvent) => void) | null = null;
+  private lastTapTime = 0;
+  private lastTapPos = { x: 0, y: 0 };
 
   constructor(
     selector = '.glass-panel, .crystal-element, [data-glass-crack], .glass-card, [data-glass], .crystal-glass'
@@ -108,7 +110,7 @@ export class GlassCrackSystem {
         this.resetCracks(state);
     });
 
-    // 2. Global full-viewport glass layer so clicking ANYWHERE ("har jaga par") also creates cracks
+    // 2. Global full-viewport glass layer so double clicking ANYWHERE creates cracks
     let globalCanvas = document.getElementById(
       'global-glass-crack-canvas'
     ) as HTMLCanvasElement | null;
@@ -145,23 +147,33 @@ export class GlassCrackSystem {
       this.resizeHandlers.push(globalResize);
     }
 
-    // 3. Bind ONLY mousedown/click as requested (No hover, mousemove, mouseenter, mouseleave)
-    // Works reliably on every click ("jitni bar click karna utni bar glass crack hoy")
-    this.mousedownHandler = (e: MouseEvent) => {
-      // Trigger on primary left mouse click
+    // 3. Double-Click Listener ("glass crack animation dabal click par chaly")
+    this.dblclickHandler = (e: MouseEvent) => {
+      // Trigger only on primary left mouse double click
       if (e.button !== 0) return;
       this.handleClick(e.clientX, e.clientY);
     };
 
-    this.touchstartHandler = (e: TouchEvent) => {
+    // Double-tap handler for touch devices (within 350ms and 35px radius)
+    this.touchHandler = (e: TouchEvent) => {
       if (e.touches && e.touches.length > 0) {
         const touch = e.touches[0];
-        this.handleClick(touch.clientX, touch.clientY);
+        const now = Date.now();
+        const dist = Math.hypot(touch.clientX - this.lastTapPos.x, touch.clientY - this.lastTapPos.y);
+
+        if (now - this.lastTapTime < 350 && dist < 35) {
+          // Double tap recognized!
+          this.handleClick(touch.clientX, touch.clientY);
+          this.lastTapTime = 0;
+        } else {
+          this.lastTapTime = now;
+          this.lastTapPos = { x: touch.clientX, y: touch.clientY };
+        }
       }
     };
 
-    document.addEventListener('mousedown', this.mousedownHandler, { passive: true });
-    document.addEventListener('touchstart', this.touchstartHandler, { passive: true });
+    document.addEventListener('dblclick', this.dblclickHandler, { passive: true });
+    document.addEventListener('touchstart', this.touchHandler, { passive: true });
   }
 
   handleClick(clientX: number, clientY: number) {
@@ -475,13 +487,13 @@ export class GlassCrackSystem {
     this.resizeHandlers.forEach((unsub) => unsub());
     this.resizeHandlers = [];
 
-    if (this.mousedownHandler) {
-      document.removeEventListener('mousedown', this.mousedownHandler);
-      this.mousedownHandler = null;
+    if (this.dblclickHandler) {
+      document.removeEventListener('dblclick', this.dblclickHandler);
+      this.dblclickHandler = null;
     }
-    if (this.touchstartHandler) {
-      document.removeEventListener('touchstart', this.touchstartHandler);
-      this.touchstartHandler = null;
+    if (this.touchHandler) {
+      document.removeEventListener('touchstart', this.touchHandler);
+      this.touchHandler = null;
     }
 
     this.states.forEach((state) => {
