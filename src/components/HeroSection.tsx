@@ -146,7 +146,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenCms }) => {
 
         {/* Right Column: Hero Spotlight Reveal Portrait */}
         <div className="lg:col-span-7 xl:col-span-7 flex flex-col justify-end items-center lg:items-end relative z-10 mt-6 lg:mt-0 self-end overflow-visible">
-          <HeroSpotlightPortrait rotateX={rotateX} rotateY={rotateY} />
+          <HeroSpotlightPortrait />
         </div>
 
       </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { motion, MotionValue } from 'motion/react';
 
 const BG_IMAGE_1 =
   'https://cdn.phototourl.com/free/2026-09-14-0a8baeec-a3a6-462a-82c7-5d23cb124bd8.png';
@@ -8,14 +7,12 @@ const BG_IMAGE_2 =
   'https://cdn.phototourl.com/free/2026-09-14-97263ce4-49ce-4cbd-9c75-038e93a2f689.png';
 
 interface HeroSpotlightPortraitProps {
-  rotateX?: MotionValue<number>;
-  rotateY?: MotionValue<number>;
+  // Kept optional for backward compatibility if passed
+  rotateX?: unknown;
+  rotateY?: unknown;
 }
 
-export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = ({
-  rotateX,
-  rotateY,
-}) => {
+export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const revealLayerRef = useRef<HTMLDivElement | null>(null);
 
@@ -128,15 +125,10 @@ export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = ({
   }, []);
 
   return (
-    <motion.div
-      style={
-        rotateX && rotateY
-          ? { rotateX, rotateY, transformStyle: 'preserve-3d' }
-          : undefined
-      }
-      className="relative w-full flex flex-col justify-end items-center lg:items-end cursor-pointer perspective-1000 touch-pan-y"
+    <div
+      className="relative w-full flex flex-col justify-end items-center lg:items-end cursor-pointer touch-pan-y"
     >
-      {/* Frameless Portrait Container - Height 820px with zero cropping */}
+      {/* Frameless Portrait Container - Height 820px with zero cropping, static with NO hover movement */}
       <div
         ref={containerRef}
         id="hero-frameless-spotlight-portrait"
@@ -146,7 +138,7 @@ export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = ({
         <img
           src={BG_IMAGE_1}
           alt="Saad Ahmed"
-          className="w-auto h-[620px] sm:h-[720px] lg:h-[820px] max-w-full object-contain pointer-events-none ken-burns block origin-bottom"
+          className="w-auto h-[620px] sm:h-[720px] lg:h-[820px] max-w-full object-contain pointer-events-none block origin-bottom"
           style={{
             maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
@@ -177,6 +169,6 @@ export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = ({
         {/* Soft Bottom Fade Blend */}
         <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#080808] via-[#080808]/60 to-transparent pointer-events-none z-10" />
       </div>
-    </motion.div>
+    </div>
   );
 };
