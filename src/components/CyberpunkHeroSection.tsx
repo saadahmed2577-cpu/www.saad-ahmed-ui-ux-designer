@@ -1,10 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import saadPortraitCutout from '../assets/images/regenerated_image_1785895097597.png';
 
-const BG_IMAGE_1 =
-  'https://cdn.phototourl.com/free/2026-09-14-0a8baeec-a3a6-462a-82c7-5d23cb124bd8.png';
-
-const BG_IMAGE_2 =
-  'https://cdn.phototourl.com/free/2026-09-14-97263ce4-49ce-4cbd-9c75-038e93a2f689.png';
+const BG_IMAGE_1 = saadPortraitCutout;
+const BG_IMAGE_2 = saadPortraitCutout;
 
 interface CyberpunkHeroSectionProps {
   onReserveClick?: () => void;

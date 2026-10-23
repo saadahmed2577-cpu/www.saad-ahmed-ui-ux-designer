@@ -25,6 +25,13 @@ export const AboutSection: React.FC = () => {
               <img
                 src={designerPortrait || saadHeadshot}
                 alt="Saad Ahmed UI UX Designer"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== saadHeadshot) {
+                    target.src = saadHeadshot;
+                  }
+                }}
                 className="w-full h-64 object-cover rounded-xl filter brightness-105 group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent opacity-70 pointer-events-none" />

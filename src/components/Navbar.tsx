@@ -175,6 +175,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenCms, activeSection }) => {
                 alt="Saad Ahmed Avatar"
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== saadHeadshot) {
+                    target.src = saadHeadshot;
+                  }
+                }}
               />
             </div>
           </div>
