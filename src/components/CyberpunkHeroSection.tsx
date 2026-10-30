@@ -1,17 +1,50 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import localBg1 from '../assets/images/cyberpunk_hero_bg1.png';
+import localBg2 from '../assets/images/cyberpunk_hero_bg2.png';
 import saadPortraitCutout from '../assets/images/regenerated_image_1785895097597.png';
 
-const BG_IMAGE_1 = saadPortraitCutout;
-const BG_IMAGE_2 = saadPortraitCutout;
+// User provided Kommodo animation images:
+// Link 1: https://kommodo.ai/i/zyKbIiEAZ6DVmGsPXSgN
+// Link 2: https://kommodo.ai/i/DaGotVA49jAyyb5d0cIt
+export const BG_IMAGE_1 = 'https://plain-eeur-prod-public.komododecks.com/202610/23/zyKbIiEAZ6DVmGsPXSgN/image.png';
+export const BG_IMAGE_2 = 'https://plain-eeur-prod-public.komododecks.com/202610/23/DaGotVA49jAyyb5d0cIt/image.png';
+
+export const resolveImageUrl = (url: string): string => {
+  if (!url) return '';
+  const match = url.match(/kommodo\.ai\/i\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://plain-eeur-prod-public.komododecks.com/202610/23/${match[1]}/image.png`;
+  }
+  return url;
+};
 
 interface CyberpunkHeroSectionProps {
   onReserveClick?: () => void;
+  baseImage?: string;
+  revealImage?: string;
 }
 
-export const CyberpunkHeroSection: React.FC<CyberpunkHeroSectionProps> = () => {
+export const CyberpunkHeroSection: React.FC<CyberpunkHeroSectionProps> = ({
+  baseImage = BG_IMAGE_1,
+  revealImage = BG_IMAGE_2,
+}) => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const revealLayerRef = useRef<HTMLDivElement | null>(null);
   const gridContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [bg1, setBg1] = useState<string>(() => resolveImageUrl(baseImage) || localBg1);
+  const [bg2, setBg2] = useState<string>(() => resolveImageUrl(revealImage) || localBg2);
+
+  useEffect(() => {
+    // Pre-test image loading and fallback gracefully if network/CORS issues occur
+    const testImg1 = new Image();
+    testImg1.src = resolveImageUrl(baseImage);
+    testImg1.onerror = () => setBg1(localBg1 || saadPortraitCutout);
+
+    const testImg2 = new Image();
+    testImg2.src = resolveImageUrl(revealImage);
+    testImg2.onerror = () => setBg2(localBg2 || saadPortraitCutout);
+  }, [baseImage, revealImage]);
 
   useEffect(() => {
     let animFrameId: number;
@@ -177,7 +210,7 @@ export const CyberpunkHeroSection: React.FC<CyberpunkHeroSectionProps> = () => {
         id="base-hero-image"
         className="absolute inset-0 z-5 bg-center bg-cover ken-burns"
         style={{
-          backgroundImage: `url('${BG_IMAGE_1}')`,
+          backgroundImage: `url('${bg1}')`,
         }}
       />
 
@@ -187,7 +220,7 @@ export const CyberpunkHeroSection: React.FC<CyberpunkHeroSectionProps> = () => {
         id="reveal-hero-image"
         className="absolute inset-0 z-20 bg-center bg-cover pointer-events-none"
         style={{
-          backgroundImage: `url('${BG_IMAGE_2}')`,
+          backgroundImage: `url('${bg2}')`,
           maskSize: '100% 100%',
           WebkitMaskSize: '100% 100%',
           maskRepeat: 'no-repeat',

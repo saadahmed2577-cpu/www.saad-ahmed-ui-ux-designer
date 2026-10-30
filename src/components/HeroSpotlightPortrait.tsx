@@ -1,18 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
+import localBg1 from '../assets/images/cyberpunk_hero_bg1.png';
+import localBg2 from '../assets/images/cyberpunk_hero_bg2.png';
 import saadPortraitCutout from '../assets/images/regenerated_image_1785895097597.png';
 import saadCutoutAlt from '../assets/images/saad_cutout_png_1785843753308.jpg';
 import saadHeadshot from '../assets/images/saad_avatar_headshot_1785846847266.jpg';
 
+// User provided Kommodo image links:
+// Link 1 (Base): https://kommodo.ai/i/zyKbIiEAZ6DVmGsPXSgN
+// Link 2 (Reveal): https://kommodo.ai/i/DaGotVA49jAyyb5d0cIt
+export const BG_IMAGE_1 = 'https://plain-eeur-prod-public.komododecks.com/202610/23/zyKbIiEAZ6DVmGsPXSgN/image.png';
+export const BG_IMAGE_2 = 'https://plain-eeur-prod-public.komododecks.com/202610/23/DaGotVA49jAyyb5d0cIt/image.png';
+
+export const resolveImageUrl = (url: string): string => {
+  if (!url) return '';
+  const match = url.match(/kommodo\.ai\/i\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://plain-eeur-prod-public.komododecks.com/202610/23/${match[1]}/image.png`;
+  }
+  return url;
+};
+
 interface HeroSpotlightPortraitProps {
   rotateX?: unknown;
   rotateY?: unknown;
+  baseImage?: string;
+  revealImage?: string;
 }
 
-export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = () => {
+export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = ({
+  baseImage = BG_IMAGE_1,
+  revealImage = BG_IMAGE_2,
+}) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const revealLayerRef = useRef<HTMLDivElement | null>(null);
-  const hudReticleRef = useRef<HTMLDivElement | null>(null);
-  const [imgSrc, setImgSrc] = useState(saadPortraitCutout);
+
+  const [baseSrc, setBaseSrc] = useState<string>(() => resolveImageUrl(baseImage) || localBg1);
+  const [revealSrc, setRevealSrc] = useState<string>(() => resolveImageUrl(revealImage) || localBg2);
 
   useEffect(() => {
     let animFrameId: number;
@@ -91,12 +114,6 @@ export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = () =>
       revealLayerRef.current.style.maskImage = mask;
       revealLayerRef.current.style.webkitMaskImage = mask;
 
-      // Update cyberpunk reticle position
-      if (hudReticleRef.current) {
-        hudReticleRef.current.style.transform = `translate3d(${(currX - 40).toFixed(1)}px, ${(currY - 40).toFixed(1)}px, 0)`;
-        hudReticleRef.current.style.opacity = hasInteracted ? '0.85' : '0.4';
-      }
-
       animFrameId = requestAnimationFrame(render);
     };
 
@@ -109,27 +126,39 @@ export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = () =>
     };
   }, []);
 
-  const handleImageError = () => {
-    if (imgSrc !== saadCutoutAlt) {
-      setImgSrc(saadCutoutAlt);
-    } else if (imgSrc !== saadHeadshot) {
-      setImgSrc(saadHeadshot);
+  const handleBaseError = () => {
+    if (baseSrc !== localBg1) {
+      setBaseSrc(localBg1);
+    } else if (baseSrc !== saadPortraitCutout) {
+      setBaseSrc(saadPortraitCutout);
+    } else if (baseSrc !== saadCutoutAlt) {
+      setBaseSrc(saadCutoutAlt);
+    }
+  };
+
+  const handleRevealError = () => {
+    if (revealSrc !== localBg2) {
+      setRevealSrc(localBg2);
+    } else if (revealSrc !== saadPortraitCutout) {
+      setRevealSrc(saadPortraitCutout);
+    } else if (revealSrc !== saadHeadshot) {
+      setRevealSrc(saadHeadshot);
     }
   };
 
   return (
-    <div className="relative w-full flex flex-col justify-end items-center lg:items-end cursor-crosshair touch-pan-y">
+    <div className="relative w-full flex flex-col justify-end items-center lg:items-end cursor-pointer touch-pan-y">
       {/* Frameless Portrait Container - Height 820px, zero cropping */}
       <div
         ref={containerRef}
         id="hero-frameless-spotlight-portrait"
         className="relative select-none flex items-end justify-center lg:justify-end w-full h-[620px] sm:h-[720px] lg:h-[820px] overflow-hidden"
       >
-        {/* Layer 1: Dark Luxury Noir Base Portrait */}
+        {/* Layer 1: Dark Luxury Noir Base Portrait (Base Animation Image) */}
         <img
-          src={imgSrc}
-          alt="Saad Ahmed UI/UX Designer"
-          onError={handleImageError}
+          src={baseSrc}
+          alt="Saad Ahmed UI/UX Designer - Base Hero"
+          onError={handleBaseError}
           referrerPolicy="no-referrer"
           className="w-auto h-[620px] sm:h-[720px] lg:h-[820px] max-w-full object-contain pointer-events-none block origin-bottom filter grayscale contrast-[1.12] brightness-[0.88] opacity-95 transition-opacity duration-300"
           style={{
@@ -138,7 +167,7 @@ export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = () =>
           }}
         />
 
-        {/* Layer 2: Interactive Cyberpunk Red Spotlight Reveal Layer */}
+        {/* Layer 2: Interactive Spotlight Reveal Layer (Reveal Animation Image) */}
         <div
           ref={revealLayerRef}
           id="hero-reveal-image"
@@ -152,42 +181,18 @@ export const HeroSpotlightPortrait: React.FC<HeroSpotlightPortraitProps> = () =>
             WebkitMaskImage: 'radial-gradient(circle 280px at 50% 32%, black 0%, rgba(0,0,0,0.85) 45%, transparent 100%)',
           }}
         >
-          {/* Cyberpunk vivid colored portrait with crimson illumination and edge glow */}
+          {/* Natural vivid reveal portrait without red lighting or glow */}
           <img
-            src={imgSrc}
-            alt="Saad Ahmed Cyberpunk Reveal"
-            onError={handleImageError}
+            src={revealSrc}
+            alt="Saad Ahmed Spotlight Reveal"
+            onError={handleRevealError}
             referrerPolicy="no-referrer"
-            className="w-auto h-[620px] sm:h-[720px] lg:h-[820px] max-w-full object-contain pointer-events-none block origin-bottom filter drop-shadow-[0_0_25px_rgba(217,30,42,0.85)] drop-shadow-[0_0_55px_rgba(217,30,42,0.45)] brightness-[1.08] contrast-[1.2] saturate-[1.25]"
+            className="w-auto h-[620px] sm:h-[720px] lg:h-[820px] max-w-full object-contain pointer-events-none block origin-bottom brightness-[1.04] contrast-[1.1]"
             style={{
               maskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, black 88%, transparent 100%)',
             }}
           />
-
-          {/* Futuristic Cyber Scan Grid Overlay inside the spotlight */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-25 mix-blend-screen"
-            style={{
-              backgroundImage: 'linear-gradient(rgba(217, 30, 42, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(217, 30, 42, 0.3) 1px, transparent 1px)',
-              backgroundSize: '36px 36px',
-            }}
-          />
-        </div>
-
-        {/* Layer 3: Floating Cyberpunk HUD Targeting Reticle */}
-        <div
-          ref={hudReticleRef}
-          className="absolute top-0 left-0 w-20 h-20 pointer-events-none transition-opacity duration-300 z-20 hidden sm:block"
-        >
-          {/* Outer Rotating Ring */}
-          <div className="absolute inset-0 rounded-full border border-[#D91E2A]/60 animate-spin-slow" />
-          {/* Center Crosshair */}
-          <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#D91E2A] to-transparent" />
-          <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-[#D91E2A] to-transparent" />
-          <div className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[8px] font-mono tracking-widest text-[#D91E2A] uppercase bg-black/80 px-1.5 py-0.5 rounded border border-[#D91E2A]/40">
-            SYS: ACTIVE // SAAD
-          </div>
         </div>
 
         {/* Soft Bottom Fade Blend to eliminate any harsh edge */}

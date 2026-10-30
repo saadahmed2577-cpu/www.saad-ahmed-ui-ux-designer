@@ -6,11 +6,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
+// User provided Kommodo animation images:
+// Link 1 (Base): https://kommodo.ai/i/zyKbIiEAZ6DVmGsPXSgN
+// Link 2 (Reveal): https://kommodo.ai/i/DaGotVA49jAyyb5d0cIt
+const resolveKommodoUrl = (url: string) => {
+  const match = url.match(/kommodo\.ai\/i\/([a-zA-Z0-9_-]+)/);
+  if (match && match[1]) {
+    return `https://plain-eeur-prod-public.komododecks.com/202610/23/${match[1]}/image.png`;
+  }
+  return url;
+};
+
 const BG_IMAGE_1 =
-  'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_125121_afb71ce9-9c64-4c54-90b5-c89c0764c052.png&w=1920&q=85';
+  resolveKommodoUrl('https://kommodo.ai/i/zyKbIiEAZ6DVmGsPXSgN');
 
 const BG_IMAGE_2 =
-  'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_135737_0da59642-725b-451a-997b-b0283d95a42a.png&w=1280&q=85';
+  resolveKommodoUrl('https://kommodo.ai/i/DaGotVA49jAyyb5d0cIt');
 
 const NAV_LINKS = [
   { label: 'Module', active: true },
